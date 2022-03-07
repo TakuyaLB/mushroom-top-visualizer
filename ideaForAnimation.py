@@ -51,6 +51,7 @@ b_speed = 5
 
 # start moving `b` automatically
 move_b()
+print("here")
 
 # start program
 root.mainloop()

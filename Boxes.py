@@ -1,4 +1,5 @@
 from cProfile import label
+import re
 import tkinter as tk
 
 
@@ -28,19 +29,53 @@ def draw_boxes(list_nums):
         box_objects [str(list_nums[i])] = box
         label_objects [str(list_nums[i])] = label
 
-# def move():
-#     y = (c_height - box_width) // 2 
-#     print(y)
-#     if y >= 0:
-#         canvas.move(box_objects.get("1"), 0, -1)
-#         y -= 1
-#         canvas.after(25, move())
-#     else:
-#         return
+def move():
+    global b_speed
+    global b_move_down
 
+    rect = box_objects.get("2")
+    lab = label_objects.get("2")
 
-draw_boxes([1,2,3,4,5,6,7,8])
+    canvas.move(rect, 0, b_speed)
+    canvas.move(lab, 0, b_speed)
+
+    # get current position        
+    x1, y1, x2, y2 = canvas.coords(rect)
+    print(y1, y2)
+
+    # check if you have to change direction
+    #if b_speed > 0:
+    if b_move_down:
+        # if it reachs bottom
+        if y2 > c_height:
+            # change direction
+            #b_move_down = False
+            b_move_down = not b_move_down
+            b_speed = -b_speed
+    else:
+        # if it reachs top
+        if y1 < 0:
+            # change direction
+            #b_move_down = True
+            b_move_down = not b_move_down
+            b_speed = -b_speed
+
+    # move again after 25 ms (0.025s)
+    root.after(25, move)
+
+def delete(num):
+    string_num = str (num)
+    canvas.delete(box_objects.get(string_num))
+    canvas.delete(label_objects.get(string_num))
+
+b_speed = 5
+b_move_down = True
+
+def main():
+    draw_boxes([1,2,3,4,5,6,7,8])
+    move()
 # move()
 
+main()
 
 root.mainloop()
