@@ -11,6 +11,7 @@ window.geometry("1920x1080")
 mode = Frame(window)
 algorithms = Frame(window)
 userinput = Frame(window)
+blocksorting = Frame(window)
 exercises = Frame(window)
 answers = Frame(window)
 
@@ -28,6 +29,7 @@ def change_to_mode():
     answers.pack_forget()
 
 def change_to_algorithms():
+    entry.delete(0, "end")
     algorithms.pack(fill='both', expand=1)
     mode.pack_forget()
     userinput.pack_forget()
@@ -37,6 +39,13 @@ def change_to_userinput(algorithm):
     sortingAlgorithm = algorithm
     userinput.pack(fill='both', expand=1)
     algorithms.pack_forget()
+    blocksorting.pack_forget()
+
+def change_to_blocksorting():
+    entry.delete(0, "end")
+    getelements()
+    blocksorting.pack(fill='both', expand=1)
+    userinput.pack_forget()
 
 def change_to_exercises():
     exercises.pack(fill='both', expand=1)
@@ -86,7 +95,7 @@ button3.place(relx = 0.5, rely = 0.1, anchor = N)
 button4 = Button(algorithms, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "Back", command = change_to_mode)
 button4.place(relx = 0.5, rely = 0.2, anchor = N)
 
-button5 = Button(userinput, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "sort", command = getelements)
+button5 = Button(userinput, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "sort", command = change_to_blocksorting)
 button5.place(relx = 0.5, rely = 0.5, anchor = CENTER)
 button6 = Button(userinput, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "Back", command = change_to_algorithms)
 button6.place(relx = 0.5, rely = 0.6, anchor = N)
@@ -110,6 +119,9 @@ button10 = Button(answers, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = 
 button10.place(relx = 0.5, rely = 0.6, anchor = N)
 result = Label(answers)
 result.place(relx = 0.5, rely = 0.4, anchor = N)
+
+button11 = Button(blocksorting, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "Back", command = lambda: change_to_userinput(sortingAlgorithm))
+button11.place(relx = 0.5, rely = 0.8, anchor = N)
 
 change_to_mode()
 
