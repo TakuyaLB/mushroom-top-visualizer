@@ -104,17 +104,19 @@ def move_up(key1, x_coord, n):
     else:
         return 
 
+def swap(num1, num2):
+    global x_coord1, x_coord2
+    list_nums = list(box_objects)
+    x_coord1, xc2, yc1, yc2 = canvas.coords(box_objects.get(str(num1)))
+    x_coord2, xc22, yc11, yc22 = canvas.coords(box_objects.get(str(num2)))
+    print(list_nums)
+    n = abs(list_nums.index(num1) - list_nums.index(num2)) - 1
+    move_down(num1, x_coord1, n)
+    move_up(num2, x_coord2, n)
 
 def main():
     draw_boxes([4, 1, 8, 6, 2])
-    global x_coord1, x_coord2
-    x_coord1, xc2, yc1, yc2 = canvas.coords(box_objects.get("4"))
-    x_coord2, xc22, yc11, yc22 = canvas.coords(box_objects.get("6"))
-    n = find_n("4", "6", list(box_objects))
-    print(n)
-    move_down("4", x_coord1, n)
-    move_up("6", x_coord2, n)
-
+    swap(str(4), str(2))
 
 
 
