@@ -6,8 +6,8 @@ import tkinter as tk
 
 root = tk.Tk()
 
-width,height=1300,700 # set the variables 
-c_width,c_height=width,height # canvas width height
+width,height=1300,700 
+c_width,c_height=width,height 
 d=str(width)+"x"+str(height)
 root.geometry(d) 
 canvas = tk.Canvas(root, width=c_width, height=c_height,bg='black')
@@ -40,7 +40,6 @@ def find_n(key1, key2, temp_list):
         else:
             del temp_list[0]
             found = True
-    print(temp_list)
     found = False
     while not found:
         if temp_list[index] != key2:
@@ -51,48 +50,71 @@ def find_n(key1, key2, temp_list):
 
     return(n)
 
-def move_down(key1, key2, x_speed, y_speed):
-    global b_speed
-    global b_move_down
+def move_down(key1, x_coord, n):
     rect = box_objects.get(key1)
     lab = label_objects.get(key1)
-    
+    x_speed = y_speed = 0
 
     x1, y1, x2, y2 = canvas.coords(rect)
-    # target_x1 = x1 + ((n+1)(box_length) + (n+1)(space))
+    target_x1 = x_coord + ((n+1)*(box_length) + (n+1)*(space))
 
 
-    if y2 < c_height - 200:
+    if (x1 < target_x1 and y2 < (c_height//2) + 100):
         x_speed = 0
         y_speed = 5
-    else:
+    elif x1 < target_x1 and y2 >= (c_height//2) + 100:
         x_speed = 5 
         y_speed = 0
+    elif y2 >= (c_height // 2) + 35:
+        x_speed = 0
+        y_speed = -5
 
     canvas.move(rect, x_speed, y_speed)
     canvas.move(lab, x_speed, y_speed)
 
-    # get current position        
-
-
-    # check if you have to change direction
-    #if b_speed > 0:
-    if x2< c_width:
-        canvas.after(25, lambda: move_down(key1, key2, x ,y))
+    if y2 >= (c_height // 2) + 30:
+        canvas.after(25, lambda: move_down(key1, x_coord, n))
     else:
         return 
 
-b_speed = 5
-b_move_down = True
+def move_up(key1, x_coord, n):
+    rect = box_objects.get(key1)
+    lab = label_objects.get(key1)
+    x_speed = y_speed = 0
+
+    x1, y1, x2, y2 = canvas.coords(rect)
+    target_x1 = x_coord - ((n+1)*(box_length) + (n+1)*(space))
+
+
+    if (x1 > target_x1 and y2 > (c_height // 2) - 100):
+        x_speed = 0
+        y_speed = -5
+    elif x1 > target_x1 and y2 <= (c_height // 2) - 100:
+        x_speed = -5
+        y_speed = 0
+    elif y2 <= (c_height // 2) + 25:
+        x_speed = 0
+        y_speed = 5
+
+    canvas.move(rect, x_speed, y_speed)
+    canvas.move(lab, x_speed, y_speed)
+
+    if y2 <= (c_height // 2) + 30:
+        canvas.after(25, lambda: move_up(key1, x_coord, n))
+    else:
+        return 
+
 
 def main():
     draw_boxes([4, 1, 8, 6, 2])
-    
-    n = find_n("1", "2", list(box_objects))
+    global x_coord1, x_coord2
+    x_coord1, xc2, yc1, yc2 = canvas.coords(box_objects.get("4"))
+    x_coord2, xc22, yc11, yc22 = canvas.coords(box_objects.get("6"))
+    n = find_n("4", "6", list(box_objects))
     print(n)
+    move_down("4", x_coord1, n)
+    move_up("6", x_coord2, n)
 
-    move_down("1", "1", 0, 5)
-    move_down("2", "2", 0, 5)
 
 
 
