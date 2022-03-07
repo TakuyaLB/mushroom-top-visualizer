@@ -1,0 +1,6 @@
+What is the (average case) order of growth of Bubblesort?
+n^2
+What is the (average case) order of growth of Mergesort?
+nlogn
+What is the (average case) order of growth of Quicksort?
+nlogn
