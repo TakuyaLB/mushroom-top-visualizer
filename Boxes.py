@@ -51,7 +51,7 @@ def find_n(key1, key2, temp_list):
 
     return(n)
 
-def move_down(key1, key2, x_speed, y_speed):
+def move_down(key1, key2, x_speed, y_speed, x_coord, n):
     global b_speed
     global b_move_down
     rect = box_objects.get(key1)
@@ -59,26 +59,24 @@ def move_down(key1, key2, x_speed, y_speed):
     
 
     x1, y1, x2, y2 = canvas.coords(rect)
-    # target_x1 = x1 + ((n+1)(box_length) + (n+1)(space))
+    target_x1 = x_coord + ((n+1)*(box_length) + (n+1)*(space))
 
 
-    if y2 < c_height - 200:
+    if (x1 < target_x1 and y2 < c_height - 200):
         x_speed = 0
         y_speed = 5
-    else:
+    elif x1 < target_x1 and y2 >= c_height - 200:
         x_speed = 5 
         y_speed = 0
+    elif y2 >= (c_height // 2) + 35:
+        x_speed = 0
+        y_speed = -5
 
     canvas.move(rect, x_speed, y_speed)
     canvas.move(lab, x_speed, y_speed)
 
-    # get current position        
-
-
-    # check if you have to change direction
-    #if b_speed > 0:
-    if x2< c_width:
-        canvas.after(25, lambda: move_down(key1, key2, x ,y))
+    if y2 >= (c_height // 2) + 30:
+        canvas.after(25, lambda: move_down(key1, key2, x ,y, x_coord, n))
     else:
         return 
 
@@ -87,12 +85,13 @@ b_move_down = True
 
 def main():
     draw_boxes([4, 1, 8, 6, 2])
-    
+    global x_coord
+    x_coord, xc2, yc1, yc2 = canvas.coords(box_objects.get("1"))
     n = find_n("1", "2", list(box_objects))
     print(n)
 
-    move_down("1", "1", 0, 5)
-    move_down("2", "2", 0, 5)
+    move_down("1", "1", 0, 5, x_coord, n)
+
 
 
 
