@@ -42,7 +42,7 @@ def change_to_userinput(algorithm):
     blocksorting.pack_forget()
 
 def change_to_blocksorting():
-    entry.delete(0, "end")
+    entry.delete(0, "end")a
     getelements()
     blocksorting.pack(fill='both', expand=1)
     userinput.pack_forget()
