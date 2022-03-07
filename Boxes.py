@@ -29,51 +29,45 @@ def draw_boxes(list_nums):
         box_objects [str(list_nums[i])] = box
         label_objects [str(list_nums[i])] = label
 
-def move():
+def move_down(r_key, l_key, x, y):
     global b_speed
     global b_move_down
+    rect = box_objects.get(r_key)
+    lab = label_objects.get(l_key)
+    x1, y1, x2, y2 = canvas.coords(rect)
 
-    rect = box_objects.get("2")
-    lab = label_objects.get("2")
+    if y2 < c_height - 200:
+        x = 0
+        y = 5
+    else:
+        x = 5 
+        y = 0
 
-    canvas.move(rect, 0, b_speed)
-    canvas.move(lab, 0, b_speed)
+    canvas.move(rect, x, y)
+    canvas.move(lab, x, y)
 
     # get current position        
-    x1, y1, x2, y2 = canvas.coords(rect)
     print(y1, y2)
 
     # check if you have to change direction
     #if b_speed > 0:
-    if b_move_down:
-        # if it reachs bottom
-        if y2 > c_height:
-            # change direction
-            #b_move_down = False
-            b_move_down = not b_move_down
-            b_speed = -b_speed
+    if x2< c_width:
+        canvas.after(25, lambda: move_down(r_key, l_key, x ,y))
     else:
-        # if it reachs top
-        if y1 < 0:
-            # change direction
-            #b_move_down = True
-            b_move_down = not b_move_down
-            b_speed = -b_speed
-
-    # move again after 25 ms (0.025s)
-    root.after(25, move)
-
-def delete(num):
-    string_num = str (num)
-    canvas.delete(box_objects.get(string_num))
-    canvas.delete(label_objects.get(string_num))
+        return 
 
 b_speed = 5
 b_move_down = True
 
 def main():
     draw_boxes([1,2,3,4,5,6,7,8])
-    move()
+    global x1, y1, x2, y2 
+    x1, y1, x2, y2 = canvas.coords(box_objects.get("2"))
+    move_down("2", "2", 0, 5)
+    move_down("3", "3", 0, 5)
+    # if x2 < c_width:
+    # canvas.after(3000, move_right("2", "2"))
+    # move_right("2", "2")
 # move()
 
 main()
