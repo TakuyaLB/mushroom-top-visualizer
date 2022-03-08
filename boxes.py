@@ -88,23 +88,32 @@ class Animation:
             rect2 = self.rect_positions.get(num1)
 
 
-        step = 100
+        step = 5
+        dist_to_target = 100
+        ori_y = rect1.y
 
-        rect1.y += step
-        rect2.y -= step
-        self.draw_boxes(win)
-        pygame.time.delay(1000)
+        while (rect1.y <= ori_y + dist_to_target):
+            rect1.y += step
+            rect2.y -= step
+            self.draw_boxes(win)
+            pygame.time.delay(50)
 
+        ori_x = rect1.x
         target_x1 = ((dist + 1) * (self.box_size) + (dist + 1) * (self.space))
-        rect1.x += target_x1
-        rect2.x -= target_x1
-        self.draw_boxes(win)
-        pygame.time.delay(1000)
 
-        rect1.y -= step
-        rect2.y += step
-        self.draw_boxes(win)
-        pygame.time.delay(1000)
+        while (rect1.x <= ori_x + target_x1 - step):
+            rect1.x += step
+            rect2.x -= step
+            self.draw_boxes(win)
+            pygame.time.delay(50)
+
+        ori_y = rect1.y
+
+        while (rect1.y >= ori_y - dist_to_target):
+            rect1.y -= step
+            rect2.y += step
+            self.draw_boxes(win)
+            pygame.time.delay(50)
 
 run = True
 
