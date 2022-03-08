@@ -4,125 +4,123 @@ import random
 BUTTON_HEIGHT = 1
 BUTTON_WIDTH = 10
 
-window = Tk()
-window.title("Sorting Algorithms")
-window.geometry("1920x1080")
+class Interface: 
+    def __init__(self, window):
+        self.mode = Frame(window)
+        self.algorithms = Frame(window)
+        self.userinput = Frame(window)
+        self.exercises = Frame(window)
+        self.answers = Frame(window)
 
-mode = Frame(window)
-algorithms = Frame(window)
-userinput = Frame(window)
-blocksorting = Frame(window)
-exercises = Frame(window)
-answers = Frame(window)
+        self.randomquestion, self.randomanswer = self.newQandA()
+        self.resultmessage = None
 
-f = open("QandA.txt", "r")
-lines = f.readlines()
-global QandA
-QandA = []
-for x in range(0, len(lines) - 1, 2):
-    QandA.append([lines[x].replace("\n", ""), lines[x+1].replace("\n", "")])
+        self.button1 = Button(self.mode, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "Sorting", command = self.change_to_algorithms)
+        self.button1.place(relx = 0.5, rely = 0.4, anchor = N)
+        self.button2 = Button(self.mode, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "Exercises", command = self.change_to_exercises)
+        self.button2.place(relx = 0.5, rely = 0.5, anchor = N)
 
-def change_to_mode():
-    mode.pack(fill='both', expand=1)
-    algorithms.pack_forget()
-    exercises.pack_forget()
-    answers.pack_forget()
+        self.button3 = Button(self.algorithms, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "Bubblesort", command = lambda: self.change_to_userinput("Bubblesort"))
+        self.button3.place(relx = 0.5, rely = 0.1, anchor = N)
+        self.button4 = Button(self.algorithms, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "Back", command = self.change_to_mode)
+        self.button4.place(relx = 0.5, rely = 0.2, anchor = N)
 
-def change_to_algorithms():
-    entry.delete(0, "end")
-    algorithms.pack(fill='both', expand=1)
-    mode.pack_forget()
-    userinput.pack_forget()
+        self.button5 = Button(self.userinput, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "sort", command = self.change_to_blocksorting)
+        self.button5.place(relx = 0.5, rely = 0.5, anchor = CENTER)
+        self.button6 = Button(self.userinput, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "Back", command = self.change_to_algorithms)
+        self.button6.place(relx = 0.5, rely = 0.6, anchor = N)
+        self.entry = Entry(self.userinput, width = 40)
+        self.entry.place(relx = 0.5, rely = 0.4, anchor = N)
 
-def change_to_userinput(algorithm):
-    global sortingAlgorithm 
-    sortingAlgorithm = algorithm
-    userinput.pack(fill='both', expand=1)
-    algorithms.pack_forget()
-    blocksorting.pack_forget()
+        self.button7 = Button(self.exercises, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "Check Answer", command = self.change_to_answers)
+        self.button7.place(relx = 0.5, rely = 0.5, anchor = CENTER)
+        self.button8 = Button(self.exercises, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "Back", command = self.change_to_mode)
+        self.button8.place(relx = 0.5, rely = 0.6, anchor = N)
+        self.answerbox = Entry(self.exercises, width = 40)
+        self.answerbox.place(relx = 0.5, rely = 0.4, anchor = N)
+        self.note = Label(self.exercises, text = "remember to use ^ for exponents")
+        self.note.place(relx = 0.5, rely = 0.3, anchor = N)
+        self.question = Label(self.exercises)
+        self.question.place(relx = 0.5, rely = 0.35, anchor = N)
 
-def change_to_blocksorting():
-    entry.delete(0, "end")
-    getelements()
-    blocksorting.pack(fill='both', expand=1)
-    userinput.pack_forget()
+        self.button9 = Button(self.answers, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "Next Question", command = self.change_to_exercises)
+        self.button9.place(relx = 0.5, rely = 0.5, anchor = CENTER)
+        self.button10 = Button(self.answers, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "Back", command = self.change_to_mode)
+        self.button10.place(relx = 0.5, rely = 0.6, anchor = N)
+        self.result = Label(self.answers)
+        self.result.place(relx = 0.5, rely = 0.4, anchor = N)
 
-def change_to_exercises():
-    exercises.pack(fill='both', expand=1)
-    mode.pack_forget()
-    answers.pack_forget()
-    global randomquestion
-    global randomanswer
-    questionnumber = random.randint(0, len(QandA) - 1)
-    randomquestion = QandA[questionnumber][0]
-    randomanswer = QandA[questionnumber][1]
-    question.config(text = randomquestion)
+    def newQandA(self):
+        f = open("QandA.txt", "r")
+        lines = f.readlines()
+        QandA = []
+        for x in range(0, len(lines) - 1, 2):
+            QandA.append([lines[x].replace("\n", ""), lines[x+1].replace("\n", "")])
+        questionnumber = random.randint(0, len(QandA) - 1)
+        randomquestion = QandA[questionnumber][0]
+        randomanswer = QandA[questionnumber][1]
+        return randomquestion, randomanswer
+        
+    def change_to_mode(self):
+        self.mode.pack(fill='both', expand=1)
+        self.algorithms.pack_forget()
+        self.exercises.pack_forget()
+        self.answers.pack_forget()
 
-def change_to_answers():
-    answerbox.delete(0, "end")
-    answers.pack(fill='both', expand=1)
-    exercises.pack_forget()
-    global resultmessage
-    if answer == randomanswer:
-        resultmessage = "Correct! Answer was " + randomanswer
-    else:
-        resultmessage = "Wrong! You put " + answer + " but the correct answer was " + randomanswer
-    result.config(text = resultmessage)
+    def change_to_algorithms(self):
+        self.entry.delete(0, "end")
+        self.algorithms.pack(fill='both', expand=1)
+        self.mode.pack_forget()
+        self.userinput.pack_forget()
 
-def getanswer():
-    global answer
-    answer = answerbox.get().replace(" ","").replace("(", "").replace(")", "").replace("*", "").lower()
-    change_to_answers()
+    def change_to_userinput(self, algorithm):
+        global sortingAlgorithm 
+        sortingAlgorithm = algorithm
+        self.userinput.pack(fill='both', expand=1)
+        self.algorithms.pack_forget()
 
-def getelements():
-    elements = entry.get()
-    stripped = ""
-    for char in elements:
-        if char.isdigit():
-            stripped = stripped + char
+    def change_to_blocksorting(self):
+        self.entry.delete(0, "end")
+        nodes = self.getelements()
+        self.userinput.pack_forget()
+        self.change_to_algorithms()
+
+    def change_to_exercises(self):
+        self.exercises.pack(fill='both', expand=1)
+        self.mode.pack_forget()
+        self.answers.pack_forget()
+        self.question.config(text = self.randomquestion)
+
+    def change_to_answers(self):
+        answer = self.answerbox.get().replace(" ","").replace("(", "").replace(")", "").replace("*", "").lower()
+        self.answerbox.delete(0, "end")
+        self.answers.pack(fill='both', expand=1)
+        self.exercises.pack_forget()
+        if answer == self.randomanswer:
+            self.resultmessage = "Correct! Answer was " + self.randomanswer
         else:
-            stripped = stripped + ' '
-    global nodes
-    nodes = stripped.split( )
+            self.resultmessage = "Wrong! You put " + answer + " but the correct answer was " + self.randomanswer
+        self.result.config(text = self.resultmessage)
+        self.randomquestion, self.randomanswer = self.newQandA()
+    
+    def getelements(self):
+        elements = self.entry.get()
+        stripped = ""
+        for char in elements:
+            if char.isdigit():
+                stripped = stripped + char
+            else:
+                stripped = stripped + ' '
+        nodes = stripped.split( )
+        return nodes
 
-button1 = Button(mode, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "Sorting", command = change_to_algorithms)
-button1.place(relx = 0.5, rely = 0.4, anchor = N)
-button2 = Button(mode, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "Exercises", command = change_to_exercises)
-button2.place(relx = 0.5, rely = 0.5, anchor = N)
+def main():
+    window = Tk()
+    window.title("Sorting Algorithms")
+    window.geometry("1920x1080")
+    interface = Interface(window)
+    interface.change_to_mode()
+    window.mainloop()
 
-button3 = Button(algorithms, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "Bubblesort", command = lambda: change_to_userinput("Bubblesort"))
-button3.place(relx = 0.5, rely = 0.1, anchor = N)
-button4 = Button(algorithms, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "Back", command = change_to_mode)
-button4.place(relx = 0.5, rely = 0.2, anchor = N)
-
-button5 = Button(userinput, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "sort", command = change_to_blocksorting)
-button5.place(relx = 0.5, rely = 0.5, anchor = CENTER)
-button6 = Button(userinput, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "Back", command = change_to_algorithms)
-button6.place(relx = 0.5, rely = 0.6, anchor = N)
-entry = Entry(userinput, width = 40)
-entry.place(relx = 0.5, rely = 0.4, anchor = N)
-
-button7 = Button(exercises, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "Check Answer", command = getanswer)
-button7.place(relx = 0.5, rely = 0.5, anchor = CENTER)
-button8 = Button(exercises, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "Back", command = change_to_mode)
-button8.place(relx = 0.5, rely = 0.6, anchor = N)
-answerbox = Entry(exercises, width = 40)
-answerbox.place(relx = 0.5, rely = 0.4, anchor = N)
-note = Label(exercises, text = "remember to use ^ for exponents")
-note.place(relx = 0.5, rely = 0.3, anchor = N)
-question = Label(exercises)
-question.place(relx = 0.5, rely = 0.35, anchor = N)
-
-button9 = Button(answers, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "Next Question", command = change_to_exercises)
-button9.place(relx = 0.5, rely = 0.5, anchor = CENTER)
-button10 = Button(answers, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "Back", command = change_to_mode)
-button10.place(relx = 0.5, rely = 0.6, anchor = N)
-result = Label(answers)
-result.place(relx = 0.5, rely = 0.4, anchor = N)
-
-button11 = Button(blocksorting, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "Back", command = lambda: change_to_userinput(sortingAlgorithm))
-button11.place(relx = 0.5, rely = 0.8, anchor = N)
-
-change_to_mode()
-
-window.mainloop()
+if __name__ =='__main__':
+    main()
