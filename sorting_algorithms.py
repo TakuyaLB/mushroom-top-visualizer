@@ -112,6 +112,8 @@ class Interface:
             else:
                 stripped = stripped + ' '
         nodes = stripped.split( )
+        for node in nodes:
+            node = int(node) 
         return nodes
 
 def main():
