@@ -63,6 +63,7 @@ class Animation:
         ori_y = rect1.y
 
         while rect1.y <= ori_y + dist_to_target:
+            pygame.event.pump()
             rect1.y += step
             rect2.y -= step
             self.draw_boxes(win)
@@ -73,6 +74,7 @@ class Animation:
         ori_x2 = rect2.x
 
         while rect1.x < ori_x + target_x1 - step:
+            pygame.event.pump()
             rect1.x += step
             rect2.x -= step
             self.draw_boxes(win)
@@ -84,6 +86,7 @@ class Animation:
         ori_y = rect1.y
 
         while rect1.y >= ori_y - dist_to_target:
+            pygame.event.pump()
             rect1.y -= step
             rect2.y += step
             self.draw_boxes(win)
@@ -130,8 +133,8 @@ unsorted = [1, 2, 3, 4, 5, 6, 5, 7, 8]
 print(unsorted)
 animation = Animation(unsorted)
 animation.draw_boxes(win)
-#animation.bubble_sort()
-animation.quick_sort(0, len(inputlist) - 1)
+animation.bubble_sort()
+#animation.quick_sort(0, len(inputlist) - 1)
 
 
 while run:
