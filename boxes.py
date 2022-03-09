@@ -19,6 +19,8 @@ class Number:
 
 class Animation:
     def __init__(self, list_nums):
+        self.keypress = ""
+        self.instructions = []
         self.nums = []
         self.size = len(list_nums)
         self.width, self.height = 1300, 700
@@ -105,36 +107,53 @@ class Animation:
                     self.swap(i, i+1)
                     is_sorted = False
     #Would be easier to show quicksort with splitting function
-    def quick_sort(self, low, high):
+    def quick_sort(self, low, high, array):
         if low < high:
-            pivot = self.partition(low, high)
-            self.quick_sort(low, pivot - 1)
-            self.quick_sort(pivot + 1, high)
+            pivot = self.partition(low, high, array)
+            self.quick_sort(low, pivot - 1, array)
+            self.quick_sort(pivot + 1, high, array)
+        else:
+            self.step_through()
        
-    def partition(self, low, high):
+    def partition(self, low, high, array):
         i = low + 1
         j = high
         while j >= i:
-            if self.list_nums[i] > self.list_nums[low] and self.list_nums[j] < self.list_nums[low]:
-                self.swap(i, j)
-            if self.list_nums[i] < self.list_nums[low]:
+            if array[i] > array[low] and array[j] < array[low]:
+                self.instructions.append((i, j))
+                print(self.instructions)
+                temp = array[i]
+                array[i] = array[j]
+                array[j] = temp
+            if array[i] < array[low]:
                 i += 1
-            if self.list_nums[j] > self.list_nums[low]:
+            if array[j] > array[low]:
                 j -= 1
-        self.swap(low, i - 1)
+        self.instructions.append((low, i - 1))
+        temp = array[i - 1]
+        array[i - 1] = array[low]
+        array[low] = temp
         return i - 1
+
+    def step_through(self):
+        for (i, j) in self.instructions:
+            if self.keypress == "next" and self.instructions.index((i, j)) != len(self.instructions) - 1:
+                self.swap(i, j)
+            if self.keypress == "previous" and self.instructions.index((i, j)) != 0:
+                (iprev, jprev) = self.instructions(self.instructions.index((i, j)) - 1)
+                self.swap(iprev, jprev)
         
 
 
 run = True
 
 # unsorted = [random.randint(0, 100) for i in range(10)]
-unsorted = [1, 2, 3, 4, 5, 6, 5, 7, 8]
-print(unsorted)
+unsorted = [4, 1, 5, 6, 2, 5, 3, 7, 8]
+#print(unsorted)
 animation = Animation(unsorted)
 animation.draw_boxes(win)
-animation.bubble_sort()
-#animation.quick_sort(0, len(inputlist) - 1)
+#animation.bubble_sort()
+animation.quick_sort(0, len(unsorted) - 1, unsorted)
 
 
 while run:
@@ -143,6 +162,13 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RIGHT:
+                animation.keypress = "next"
+            if event.key == pygame.K_LEFT:
+                animation.keypress = "previous"
+            if event.key == pygame.K_m:
+                run = False
 
     animation.draw_boxes(win)
 
