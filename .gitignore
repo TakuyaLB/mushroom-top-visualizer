@@ -1,1 +1,6 @@
 /venv/
+/.idea/workspace.xml
+/.idea/shelf/
+/.idea/usage.statistics.xml
+*.iml
+.DS_Store
