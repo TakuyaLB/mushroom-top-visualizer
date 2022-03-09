@@ -101,6 +101,26 @@ class Animation:
                 if self.nums[i].num > self.nums[i+1].num:
                     self.swap(i, i+1)
                     is_sorted = False
+    #Would be easier to show quicksort with splitting function
+    def quick_sort(self, low, high):
+        if low < high:
+            pivot = self.partition(low, high)
+            self.quick_sort(low, pivot - 1)
+            self.quick_sort(pivot + 1, high)
+       
+    def partition(self, low, high):
+        i = low + 1
+        j = high
+        while j >= i:
+            if self.list_nums[i] > self.list_nums[low] and self.list_nums[j] < self.list_nums[low]:
+                self.swap(i, j)
+            if self.list_nums[i] < self.list_nums[low]:
+                i += 1
+            if self.list_nums[j] > self.list_nums[low]:
+                j -= 1
+        self.swap(low, i - 1)
+        return i - 1
+        
 
 
 run = True
@@ -110,7 +130,8 @@ unsorted = [1, 2, 3, 4, 5, 6, 5, 7, 8]
 print(unsorted)
 animation = Animation(unsorted)
 animation.draw_boxes(win)
-animation.bubble_sort()
+#animation.bubble_sort()
+animation.quick_sort(0, len(inputlist) - 1)
 
 
 while run:
