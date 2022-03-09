@@ -19,7 +19,7 @@ class Number:
 
 class Animation:
     def __init__(self, list_nums):
-        self.keypress = ""
+        #self.keypress = ""
         self.instructions = []
         self.nums = []
         self.size = len(list_nums)
@@ -113,35 +113,56 @@ class Animation:
             self.quick_sort(low, pivot - 1, array)
             self.quick_sort(pivot + 1, high, array)
         else:
+            print("here2")
             self.step_through()
        
     def partition(self, low, high, array):
         i = low + 1
         j = high
         while j >= i:
-            if array[i] > array[low] and array[j] < array[low]:
+            print(array[i], array[j], array[low])
+            if array[i] > array[low] and array[j] <= array[low]:
+                print("swap")
                 self.instructions.append((i, j))
                 print(self.instructions)
                 temp = array[i]
                 array[i] = array[j]
                 array[j] = temp
-            if array[i] < array[low]:
+            if array[i] <= array[low]:
+                print("i")
                 i += 1
             if array[j] > array[low]:
+                print("j")
                 j -= 1
         self.instructions.append((low, i - 1))
+        print("here")
         temp = array[i - 1]
         array[i - 1] = array[low]
         array[low] = temp
         return i - 1
 
     def step_through(self):
+        print(self.instructions)
+        #print(self.keypress)
         for (i, j) in self.instructions:
-            if self.keypress == "next" and self.instructions.index((i, j)) != len(self.instructions) - 1:
+            if self.keypress() == "next" and self.instructions.index((i, j)) != len(self.instructions) - 1:
                 self.swap(i, j)
-            if self.keypress == "previous" and self.instructions.index((i, j)) != 0:
+            if self.keypress() == "previous" and self.instructions.index((i, j)) != 0:
                 (iprev, jprev) = self.instructions(self.instructions.index((i, j)) - 1)
                 self.swap(iprev, jprev)
+
+    def keypress(self):
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RIGHT:
+                        return "next"
+                    if event.key == pygame.K_LEFT:
+                        return "previous"
+                    if event.key == pygame.K_m:
+                        pygame.quit()
         
 
 
@@ -155,7 +176,7 @@ animation.draw_boxes(win)
 #animation.bubble_sort()
 animation.quick_sort(0, len(unsorted) - 1, unsorted)
 
-
+'''
 while run:
     pygame.time.delay(10)
 
@@ -169,7 +190,8 @@ while run:
                 animation.keypress = "previous"
             if event.key == pygame.K_m:
                 run = False
+'''
 
-    animation.draw_boxes(win)
+    #animation.draw_boxes(win)
 
 pygame.quit()
