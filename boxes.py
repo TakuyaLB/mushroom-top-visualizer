@@ -63,6 +63,7 @@ class Animation:
         ori_y = rect1.y
 
         while rect1.y <= ori_y + dist_to_target:
+            pygame.event.pump()
             rect1.y += step
             rect2.y -= step
             self.draw_boxes(win)
@@ -73,6 +74,7 @@ class Animation:
         ori_x2 = rect2.x
 
         while rect1.x < ori_x + target_x1 - step:
+            pygame.event.pump()
             rect1.x += step
             rect2.x -= step
             self.draw_boxes(win)
@@ -84,6 +86,7 @@ class Animation:
         ori_y = rect1.y
 
         while rect1.y >= ori_y - dist_to_target:
+            pygame.event.pump()
             rect1.y -= step
             rect2.y += step
             self.draw_boxes(win)
