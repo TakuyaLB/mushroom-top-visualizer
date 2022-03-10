@@ -99,19 +99,20 @@ class Animation:
         self.nums[index1] = self.nums[index2]
         self.nums[index2] = tmp
 
-    def bubble_sort(self):
+    def bubble_sort(self, array):
         is_sorted = False
         while not is_sorted:
             is_sorted = True
-            for i in range(len(self.nums[:-1])):
-                if self.nums[i].num > self.nums[i+1].num:
-                    self.swap(i, i+1)
+            for i in range(len(array[:-1])):
+                if array[i] > array[i+1]:
+                    self.instructions.append((i, i + 1))
+                    self.switch(i, i + 1, array)
                     is_sorted = False
     #Would be easier to show quicksort with splitting function
     def quick_sort(self, low, high, array):
+        print(low, high)
         if low < high:
             pivot = self.partition(low, high, array)
-            #print("pivot = ", pivot)
             self.quick_sort(low, pivot - 1, array)
             self.quick_sort(pivot + 1, high, array)
        
@@ -122,7 +123,7 @@ class Animation:
             if array[i] > array[low] and array[j] <= array[low]:
                 self.instructions.append((i, j))
                 self.switch(i, j, array)
-            if array[i] < array[low] or array[i] == array[j]:
+            if array[i] < array[low]:
                 i += 1
             if array[j] > array[low]:
                 j -= 1
@@ -140,9 +141,10 @@ class Animation:
         x = 0
         while True:
             (i, j) = self.instructions[x]
-            if self.keypress() == "next" and x != len(self.instructions) - 1:
+            if self.keypress() == "next" and x != len(self.instructions):
                 self.swap(i, j)
-                x += 1
+                if x < len(self.instructions) - 1:
+                    x += 1
             if self.keypress() == "previous" and x != 0:
                 (iprev, jprev) = self.instructions[x - 1]
                 self.swap(iprev, jprev)
@@ -150,30 +152,65 @@ class Animation:
     
     def keypress(self):
         while True:
+            self.information_box()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RIGHT:
+                        self.information_box()
                         return "next"
                     if event.key == pygame.K_LEFT:
+                        self.information_box()
                         return "previous"
                     if event.key == pygame.K_m:
                         pygame.quit()
                         sys.exit()
+
+    def information_box(self):
+        # Create A Box
+        width = 1300
+        height = 700
+        x = width - 250
+        y = height - 675
+        pygame.draw.rect(win, "white", (x,y,200,80))
+ 
+        # Font Setup
+        font = pygame.font.SysFont("Verdana", 15)
+ 
+        # Menu Info
+        menu_info = "M - Go to the main menu"
+        menu = font.render(menu_info, True, "red")
+        menu_rect = menu.get_rect(center=(x + 100, y + 20))
+        win.blit(menu, menu_rect)
+ 
+        # Left Key Info
+        left_info = "Left Key - Previous Step"
+        left = font.render(left_info, True, "red")
+        left_rect = left.get_rect(center=(x + 95, y + 40))
+        win.blit(left, left_rect)
+ 
+        # Right Key Info
+        rigth_info = "Right Key - Next Step"
+        right = font.render(rigth_info, True, "red")
+        right_rect = right.get_rect(center=(x + 85, y + 60))
+        win.blit(right, right_rect)
+ 
+        pygame.display.update()
 
 
 
 run = True
 
 # unsorted = [random.randint(0, 100) for i in range(10)]
-unsorted = [4, 1, 5, 6, 2, 5, 3, 7, 8]
-#print(unsorted)
+unsorted = [3,1,5,2,4]
+print(unsorted)
 animation = Animation(unsorted)
 animation.draw_boxes(win)
-#animation.bubble_sort()
-animation.quick_sort(0, len(unsorted) - 1, unsorted)
+#animation.information_box()
+animation.bubble_sort(unsorted)
+#animation.quick_sort(0, len(unsorted) - 1, unsorted)
 animation.step_through()
 
 '''

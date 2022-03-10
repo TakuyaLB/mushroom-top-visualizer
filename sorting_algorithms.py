@@ -80,8 +80,8 @@ class Interface:
         self.algorithms.pack_forget()
 
     def change_to_blocksorting(self):
-        self.entry.delete(0, "end")
         nodes = self.getelements()
+        self.entry.delete(0, "end")
         self.userinput.pack_forget()
         self.change_to_algorithms()
 
@@ -111,10 +111,13 @@ class Interface:
                 stripped = stripped + char
             else:
                 stripped = stripped + ' '
-        nodes = stripped.split( )
+        nodes = stripped.split()
+        nodes = list(dict.fromkeys(nodes)) 
+        inputlist = []
         for node in nodes:
-            node = int(node) 
-        return nodes
+            inputlist.append(int(node))
+        print(inputlist)
+        return inputlist
 
 def main():
     window = Tk()
