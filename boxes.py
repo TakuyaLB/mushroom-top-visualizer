@@ -1,3 +1,4 @@
+from turtle import width
 import pygame
 from dataclasses import dataclass
 import random
@@ -98,6 +99,28 @@ class Animation:
         tmp = self.nums[index1]
         self.nums[index1] = self.nums[index2]
         self.nums[index2] = tmp
+
+    def split(self, index1, index2):
+        step = 5
+        if self.left_border - self.box_size // 2 <= 0 or self.nums[self.size - 1].rect.x + self.box_size // 2 >= self.width:
+            self.box_size = int(self.box_size * 0.75)
+            self.font = pygame.font.Font('freesansbold.ttf', int(self.box_size / 2))
+        for index in range (index1 + 1):
+            ori_x = self.nums[index].rect.x
+            while self.nums[index].rect.x > ori_x - self.box_size // 2:
+                pygame.event.pump()
+                self.nums[index].rect.x -= step
+                self.draw_boxes(win)
+                pygame.time.delay(50)
+
+        for index in range (index2, self.size, 1):
+            ori_x = self.nums[index].rect.x
+            while self.nums[index].rect.x < ori_x + self.box_size // 2:
+                pygame.event.pump()
+                self.nums[index].rect.x += step
+                self.draw_boxes(win)
+                pygame.time.delay(50)
+            
 
     def bubble_sort(self, array):
         is_sorted = False
@@ -208,10 +231,12 @@ unsorted = [3,1,5,2,4]
 print(unsorted)
 animation = Animation(unsorted)
 animation.draw_boxes(win)
+animation.split(1,2)
+animation.split(3,4)
 #animation.information_box()
-animation.bubble_sort(unsorted)
+#animation.bubble_sort(unsorted)
 #animation.quick_sort(0, len(unsorted) - 1, unsorted)
-animation.step_through()
+#animation.step_through()
 
 '''
 while run:
