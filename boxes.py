@@ -92,18 +92,19 @@ class Animation:
             pygame.time.delay(50)
 
         ori_x = rect1.x
-        target_x1 = ((dist + 1) * self.box_size + (dist + 1) * self.space)
+        target_x1 = rect2.x
+        target_x2 = rect1.x
         ori_x2 = rect2.x
 
-        while rect1.x < ori_x + target_x1 - step:
+        while rect1.x < target_x1 - step:
             pygame.event.pump()
             rect1.x += step
             rect2.x -= step
             self.draw_boxes(win)
             pygame.time.delay(50)
 
-        rect1.x = ori_x + target_x1
-        rect2.x = ori_x2 - target_x1
+        rect1.x = target_x1
+        rect2.x = target_x2
 
         ori_y = rect1.y
 
@@ -290,13 +291,15 @@ class Animation:
 run = True
 
 unsorted = [random.randint(0, 100) for i in range(10)]
-#unsorted = [5,4,3,2,1]
+unsorted = [5,4,3,2,1]
 print(unsorted)
 animation = Animation(unsorted)
 animation.draw_boxes(win)
+animation.split(1)
+animation.swap(1,3)
 #animation.information_box()
 #animation.bubble_sort(unsorted)
-animation.quick_sort(0, len(unsorted) - 1, unsorted)
+#animation.quick_sort(0, len(unsorted) - 1, unsorted)
 #animation.selection_sort(unsorted)
 animation.step_through()
 
