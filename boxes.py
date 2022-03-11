@@ -121,7 +121,7 @@ class Animation:
     def split(self, index1, index2):
         self.split_index.append(index1)
         step = 5
-        if self.nums[0].rect.x - self.box_size // 2 <= 0 or self.nums[self.size - 1].rect.x + self.box_size // 2 >= self.width:
+        if self.nums[0].rect.x - self.box_size // 2 <= 0 or (self.nums[self.size - 1].rect.x + self.box_size) + self.box_size // 2 >= self.width:
             print(self.nums[0].rect.x - self.box_size // 2)
             self.num_box_lengths += 1
             self.resize(index1)
@@ -248,7 +248,7 @@ class Animation:
 run = True
 
 # unsorted = [random.randint(0, 100) for i in range(10)]
-unsorted = [random.randint (0,100) for i in range(40)]
+unsorted = [random.randint (0,100) for i in range(50)]
 print(unsorted)
 animation = Animation(unsorted)
 animation.draw_boxes(win)
@@ -256,12 +256,11 @@ animation.split(1,2)
 animation.split(3,4)
 animation.split(7,8)
 animation.split(9,10)
-animation.split(11,12)
 animation.split(17,18)
 #animation.information_box()
-#animation.bubble_sort(unsorted)
+# animation.bubble_sort(unsorted)
 #animation.quick_sort(0, len(unsorted) - 1, unsorted)
-#animation.step_through()
+# animation.step_through()
 
 '''
 while run:
