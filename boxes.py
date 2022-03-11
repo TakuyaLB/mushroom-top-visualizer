@@ -181,9 +181,7 @@ class Animation:
             self.instructions.append(("split", pivot + 1, 0))
             self.quick_sort(low, pivot - 1, array)
             self.quick_sort(pivot + 1, high, array)
-
     
-       
     def partition(self, low, high, array):
         i = low + 1
         j = high
