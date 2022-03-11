@@ -194,6 +194,7 @@ class Animation:
             self.instructions.append(("split", pivot + 1, 0))
             self.quick_sort(low, pivot - 1, array)
             self.quick_sort(pivot + 1, high, array)
+        print(array)
     
     def partition(self, low, high, array):
         i = low + 1
@@ -224,7 +225,7 @@ class Animation:
                 if l == "swap":
                     self.swap(i, j)
                 if l == "split":
-                    self.split(i, i + 1)
+                    self.split(i)
                 if x < len(self.instructions) - 1:
                     x += 1
             if self.keypress() == "previous" and x != 0:
@@ -232,7 +233,7 @@ class Animation:
                 if lprev == "swap":
                     self.swap(iprev, jprev)
                 if lprev == "split":
-                    self.split(iprev, iprev + 1)
+                    self.combine(iprev)
                 x -= 1
     
     def keypress(self):
@@ -288,15 +289,15 @@ class Animation:
 
 run = True
 
-# unsorted = [random.randint(0, 100) for i in range(10)]
-unsorted = [5,4,3,2,1]
+unsorted = [random.randint(0, 100) for i in range(10)]
+#unsorted = [5,4,3,2,1]
 print(unsorted)
 animation = Animation(unsorted)
 animation.draw_boxes(win)
 #animation.information_box()
 #animation.bubble_sort(unsorted)
-# animation.quick_sort(0, len(unsorted) - 1, unsorted)
-animation.selection_sort(unsorted)
+animation.quick_sort(0, len(unsorted) - 1, unsorted)
+#animation.selection_sort(unsorted)
 animation.step_through()
 
 '''
