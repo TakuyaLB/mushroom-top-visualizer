@@ -192,8 +192,8 @@ class Animation:
     def quick_sort(self, low, high, array):
         if low < high:
             pivot = self.partition(low, high, array)
-            self.instructions.append(("split", pivot - 2, 0))
-            self.instructions.append(("split", pivot + 1, 0))
+            self.instructions.append(("split", pivot - 1, 0))
+            self.instructions.append(("split", pivot, 0))
             self.quick_sort(low, pivot - 1, array)
             self.quick_sort(pivot + 1, high, array)
         print(array)
@@ -213,6 +213,17 @@ class Animation:
             self.instructions.append(("swap", low, i - 1))
             self.switch(low, i - 1, array)
         return i - 1
+    '''
+    def merge_sort(self, array):
+        if len(array) > 2:
+            middle = len(array)//2
+            self.merge_sort(array[:middle])
+            self.merge_sort(array[middle:])
+        else:
+            self.merge(array[:middle], array[middle:])
+    
+    def merge(self, array1, array2):
+        '''
     
     def switch(self, i, j, array):
         temp = array[i]
@@ -292,16 +303,17 @@ class Animation:
 run = True
 
 unsorted = [random.randint(0, 100) for i in range(10)]
-unsorted = [5,4,3,2,1]
+#unsorted = [5,4,3,2,1]
 print(unsorted)
 animation = Animation(unsorted)
 animation.draw_boxes(win)
-animation.split(1)
-animation.swap(1,3)
+#animation.split(1)
+#animation.swap(1,3)
 #animation.information_box()
 #animation.bubble_sort(unsorted)
-#animation.quick_sort(0, len(unsorted) - 1, unsorted)
+animation.quick_sort(0, len(unsorted) - 1, unsorted)
 #animation.selection_sort(unsorted)
+print(animation.instructions)
 animation.step_through()
 
 '''
