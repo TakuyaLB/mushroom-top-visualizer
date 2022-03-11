@@ -173,6 +173,19 @@ class Animation:
                     self.instructions.append(("swap", i, i + 1))
                     self.switch(i, i + 1, array)
                     is_sorted = False
+
+    def selection_sort(self, array):
+        size = len(array)
+        for step in range(size):
+            min_index = step
+
+            for i in range(step + 1, size):
+                if array[i] < array[min_index]:
+                    min_index = i
+            
+            self.instructions.append(("swap", step, min_index))
+            self.switch(step, min_index, array)
+
     #Would be easier to show quicksort with splitting function
     def quick_sort(self, low, high, array):
         if low < high:
@@ -278,13 +291,14 @@ class Animation:
 run = True
 
 # unsorted = [random.randint(0, 100) for i in range(10)]
-unsorted = [random.randint (0,100) for i in range(15)]
+unsorted = [5,4,3,2,1]
 print(unsorted)
 animation = Animation(unsorted)
 animation.draw_boxes(win)
 #animation.information_box()
 #animation.bubble_sort(unsorted)
-animation.quick_sort(0, len(unsorted) - 1, unsorted)
+# animation.quick_sort(0, len(unsorted) - 1, unsorted)
+animation.selection_sort(unsorted)
 animation.step_through()
 
 '''
