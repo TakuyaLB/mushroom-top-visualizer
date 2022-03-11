@@ -118,14 +118,13 @@ class Animation:
         self.nums[index1] = self.nums[index2]
         self.nums[index2] = tmp
 
-    def split(self, index1, index2):
+    def split(self, index1):
+        index2 = index1 + 1
         self.split_index.append(index1)
         step = 5
+        self.num_box_lengths += 1
         if self.nums[0].rect.x - self.box_size // 2 <= 0 or (self.nums[self.size - 1].rect.x + self.box_size) + self.box_size // 2 >= self.width:
-            print(self.nums[0].rect.x - self.box_size // 2)
-            self.num_box_lengths += 1
             self.resize(index1)
-            print("resize")
         for index in range (index1 + 1):
             ori_x = self.nums[index].rect.x
             while self.nums[index].rect.x > ori_x - self.box_size // 2:
@@ -139,6 +138,28 @@ class Animation:
             while self.nums[index].rect.x < ori_x + self.box_size // 2:
                 pygame.event.pump()
                 self.nums[index].rect.x += step
+                self.draw_boxes(win)
+                pygame.time.delay(50)
+
+    def combine(self, index1):
+        index2 = index1 + 1
+        step = 5
+        self.num_box_lengths -= 1
+        # if self.nums[0].rect.x + self.box_size // 2 > 10 or (self.nums[self.size - 1].rect.x + self.box_size) < self.width - 10:
+        #     self.resize(index1)
+        for index in range (index1 + 1):
+            ori_x = self.nums[index].rect.x
+            while self.nums[index].rect.x < ori_x + self.box_size // 2:
+                pygame.event.pump()
+                self.nums[index].rect.x += step
+                self.draw_boxes(win)
+                pygame.time.delay(50)
+
+        for index in range (index2, self.size, 1):
+            ori_x = self.nums[index].rect.x
+            while self.nums[index].rect.x > ori_x - self.box_size // 2:
+                pygame.event.pump()
+                self.nums[index].rect.x -= step
                 self.draw_boxes(win)
                 pygame.time.delay(50)
             
@@ -159,6 +180,8 @@ class Animation:
             pivot = self.partition(low, high, array)
             self.quick_sort(low, pivot - 1, array)
             self.quick_sort(pivot + 1, high, array)
+
+    
        
     def partition(self, low, high, array):
         i = low + 1
@@ -252,11 +275,16 @@ unsorted = [random.randint (0,100) for i in range(50)]
 print(unsorted)
 animation = Animation(unsorted)
 animation.draw_boxes(win)
-animation.split(1,2)
-animation.split(3,4)
-animation.split(7,8)
-animation.split(9,10)
-animation.split(17,18)
+animation.split(1)
+animation.split(3)
+animation.split(5)
+animation.split(7)
+animation.split(9)
+animation.combine(1)
+animation.combine(3)
+animation.combine(5)
+animation.combine(7)
+animation.combine(9)
 #animation.information_box()
 # animation.bubble_sort(unsorted)
 #animation.quick_sort(0, len(unsorted) - 1, unsorted)
