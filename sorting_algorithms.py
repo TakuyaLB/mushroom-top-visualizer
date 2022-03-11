@@ -12,6 +12,8 @@ class Interface:
         self.exercises = Frame(window)
         self.answers = Frame(window)
 
+        self.sortingAlgorithm = ""
+
         self.randomquestion, self.randomanswer = self.newQandA()
         self.resultmessage = None
 
@@ -20,10 +22,18 @@ class Interface:
         self.button2 = Button(self.mode, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "Exercises", command = self.change_to_exercises)
         self.button2.place(relx = 0.5, rely = 0.5, anchor = N)
 
-        self.button3 = Button(self.algorithms, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "Bubblesort", command = lambda: self.change_to_userinput("Bubblesort"))
-        self.button3.place(relx = 0.5, rely = 0.1, anchor = N)
+        self.button3a = Button(self.algorithms, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "Bubblesort", command = lambda: self.change_to_userinput("Bubblesort"))
+        self.button3a.place(relx = 0.5, rely = 0.1, anchor = N)
+        self.button3b = Button(self.algorithms, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "Insertionsort", command = lambda: self.change_to_userinput("Insertionsort"))
+        self.button3b.place(relx = 0.5, rely = 0.2, anchor = N)
+        self.button3c = Button(self.algorithms, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "Selectionsort", command = lambda: self.change_to_userinput("Selectionsort"))
+        self.button3c.place(relx = 0.5, rely = 0.3, anchor = N)
+        self.button3d = Button(self.algorithms, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "Mergesort", command = lambda: self.change_to_userinput("Mergesort"))
+        self.button3d.place(relx = 0.5, rely = 0.4, anchor = N)
+        self.button3e = Button(self.algorithms, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "Quicksort", command = lambda: self.change_to_userinput("Quicksort"))
+        self.button3e.place(relx = 0.5, rely = 0.5, anchor = N)
         self.button4 = Button(self.algorithms, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "Back", command = self.change_to_mode)
-        self.button4.place(relx = 0.5, rely = 0.2, anchor = N)
+        self.button4.place(relx = 0.5, rely = 0.6, anchor = N)
 
         self.button5 = Button(self.userinput, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "sort", command = self.change_to_blocksorting)
         self.button5.place(relx = 0.5, rely = 0.5, anchor = CENTER)
@@ -74,8 +84,7 @@ class Interface:
         self.userinput.pack_forget()
 
     def change_to_userinput(self, algorithm):
-        global sortingAlgorithm 
-        sortingAlgorithm = algorithm
+        self.sortingAlgorithm = algorithm
         self.userinput.pack(fill='both', expand=1)
         self.algorithms.pack_forget()
 

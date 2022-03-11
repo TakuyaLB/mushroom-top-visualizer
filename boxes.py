@@ -186,7 +186,6 @@ class Animation:
             self.instructions.append(("swap", step, min_index))
             self.switch(step, min_index, array)
 
-    #Would be easier to show quicksort with splitting function
     def quick_sort(self, low, high, array):
         if low < high:
             pivot = self.partition(low, high, array)
