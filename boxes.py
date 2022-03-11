@@ -22,6 +22,7 @@ class Number:
 class Animation:
     def __init__(self, list_nums):
         #self.keypress = ""
+        self.scale = 0
         self.instructions = []
         self.nums = []
         self.split_index = []
@@ -41,7 +42,8 @@ class Animation:
             self.nums.append(Number(n, rect, text))
 
     def resize(self, index1):
-        self.box_size = int(min((self.width - self.space * (self.num_box_lengths + 1)) / self.num_box_lengths, 60))
+        self.scale = self.width / ((self.nums[self.size - 1].rect.x + self.box_size) - self.left_border)
+        self.box_size = int(min(self.box_size * self.scale , 60))
         self.font = pygame.font.Font('freesansbold.ttf', int(self.box_size / 2))
         self.space = int(self.box_size // 2)
         self.left_border = (self.width - ((self.box_size * self.num_box_lengths) + (self.size - 1) * self.space)) // 2
