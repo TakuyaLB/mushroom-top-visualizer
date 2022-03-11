@@ -170,14 +170,15 @@ class Animation:
             is_sorted = True
             for i in range(len(array[:-1])):
                 if array[i] > array[i+1]:
-                    self.instructions.append((i, i + 1))
+                    self.instructions.append(("swap", i, i + 1))
                     self.switch(i, i + 1, array)
                     is_sorted = False
     #Would be easier to show quicksort with splitting function
     def quick_sort(self, low, high, array):
-        print(low, high)
         if low < high:
             pivot = self.partition(low, high, array)
+            self.instructions.append(("split", pivot - 2, 0))
+            self.instructions.append(("split", pivot + 1, 0))
             self.quick_sort(low, pivot - 1, array)
             self.quick_sort(pivot + 1, high, array)
 
@@ -188,14 +189,14 @@ class Animation:
         j = high
         while j >= i:
             if array[i] > array[low] and array[j] <= array[low]:
-                self.instructions.append((i, j))
+                self.instructions.append(("swap", i, j))
                 self.switch(i, j, array)
-            if array[i] < array[low]:
+            elif array[i] < array[low]:
                 i += 1
-            if array[j] > array[low]:
+            elif array[j] > array[low]:
                 j -= 1
         if array[low] != array[i - 1]:
-            self.instructions.append((low, i - 1))
+            self.instructions.append(("swap", low, i - 1))
             self.switch(low, i - 1, array)
         return i - 1
     
@@ -207,14 +208,20 @@ class Animation:
     def step_through(self):
         x = 0
         while True:
-            (i, j) = self.instructions[x]
+            (l, i, j) = self.instructions[x]
             if self.keypress() == "next" and x != len(self.instructions):
-                self.swap(i, j)
+                if l == "swap":
+                    self.swap(i, j)
+                if l == "split":
+                    self.split(i, i + 1)
                 if x < len(self.instructions) - 1:
                     x += 1
             if self.keypress() == "previous" and x != 0:
-                (iprev, jprev) = self.instructions[x - 1]
-                self.swap(iprev, jprev)
+                (lprev, iprev, jprev) = self.instructions[x - 1]
+                if lprev == "swap":
+                    self.swap(iprev, jprev)
+                if lprev == "split":
+                    self.split(iprev, iprev + 1)
                 x -= 1
     
     def keypress(self):
@@ -271,24 +278,14 @@ class Animation:
 run = True
 
 # unsorted = [random.randint(0, 100) for i in range(10)]
-unsorted = [random.randint (0,100) for i in range(50)]
+unsorted = [random.randint (0,100) for i in range(15)]
 print(unsorted)
 animation = Animation(unsorted)
 animation.draw_boxes(win)
-animation.split(1)
-animation.split(3)
-animation.split(5)
-animation.split(7)
-animation.split(9)
-animation.combine(1)
-animation.combine(3)
-animation.combine(5)
-animation.combine(7)
-animation.combine(9)
 #animation.information_box()
-# animation.bubble_sort(unsorted)
-#animation.quick_sort(0, len(unsorted) - 1, unsorted)
-# animation.step_through()
+#animation.bubble_sort(unsorted)
+animation.quick_sort(0, len(unsorted) - 1, unsorted)
+animation.step_through()
 
 '''
 while run:
