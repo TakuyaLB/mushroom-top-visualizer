@@ -24,7 +24,9 @@ class Animation:
         #self.keypress = ""
         self.instructions = []
         self.nums = []
+        self.split_index = []
         self.size = len(list_nums)
+        self.num_box_lengths = self.size
         self.width, self.height = 1300, 700
         self.space = 10
         self.box_size = int(min((self.width - self.space * (self.size + 1)) / self.size, 60))
@@ -37,6 +39,22 @@ class Animation:
             text_rect = text.get_rect()
             text_rect.center = (self.left_border + (self.box_size + self.space) * i + self.box_size // 2), (self.top_border + self.box_size // 2)
             self.nums.append(Number(n, rect, text))
+
+    def resize(self, index1):
+        self.box_size = int(min((self.width - self.space * (self.num_box_lengths + 1)) / self.num_box_lengths, 60))
+        self.font = pygame.font.Font('freesansbold.ttf', int(self.box_size / 2))
+        self.space = int(self.box_size // 2)
+        self.left_border = (self.width - ((self.box_size * self.num_box_lengths) + (self.size - 1) * self.space)) // 2
+        self.top_border = (self.height - self.box_size) // 2
+        offset = 0
+        for i, n in enumerate(self.nums):
+            rect = pygame.Rect((self.left_border + (self.box_size + self.space) * i) + offset, self.top_border, self.box_size, self.box_size)
+            text = n.text
+            text_rect = text.get_rect()
+            text_rect.center = (self.left_border + (self.box_size + self.space) * i + self.box_size // 2), (self.top_border + self.box_size // 2)
+            self.nums[i] = Number(n, rect, text)
+            if i in self.split_index:
+                offset += self.box_size
 
     def draw_boxes(self, win):
         win.fill((0, 0, 0))
@@ -101,10 +119,13 @@ class Animation:
         self.nums[index2] = tmp
 
     def split(self, index1, index2):
+        self.split_index.append(index1)
         step = 5
-        if self.left_border - self.box_size // 2 <= 0 or self.nums[self.size - 1].rect.x + self.box_size // 2 >= self.width:
-            self.box_size = int(self.box_size * 0.75)
-            self.font = pygame.font.Font('freesansbold.ttf', int(self.box_size / 2))
+        if self.nums[0].rect.x - self.box_size // 2 <= 0 or self.nums[self.size - 1].rect.x + self.box_size // 2 >= self.width:
+            print(self.nums[0].rect.x - self.box_size // 2)
+            self.num_box_lengths += 1
+            self.resize(index1)
+            print("resize")
         for index in range (index1 + 1):
             ori_x = self.nums[index].rect.x
             while self.nums[index].rect.x > ori_x - self.box_size // 2:
@@ -227,12 +248,16 @@ class Animation:
 run = True
 
 # unsorted = [random.randint(0, 100) for i in range(10)]
-unsorted = [3,1,5,2,4]
+unsorted = [random.randint (0,100) for i in range(40)]
 print(unsorted)
 animation = Animation(unsorted)
 animation.draw_boxes(win)
 animation.split(1,2)
 animation.split(3,4)
+animation.split(7,8)
+animation.split(9,10)
+animation.split(11,12)
+animation.split(17,18)
 #animation.information_box()
 #animation.bubble_sort(unsorted)
 #animation.quick_sort(0, len(unsorted) - 1, unsorted)
