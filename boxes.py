@@ -121,28 +121,48 @@ class Animation:
         self.nums[index1] = self.nums[index2]
         self.nums[index2] = tmp
 
-    def split(self, index1):
-        index2 = index1 + 1
-        self.split_index.append(index1)
-        step = 5
-        self.num_box_lengths += 1
-        if self.nums[0].rect.x - self.box_size // 2 <= 0 or (self.nums[self.size - 1].rect.x + self.box_size) + self.box_size // 2 >= self.width:
-            self.resize(index1)
-        for index in range (index1 + 1):
-            ori_x = self.nums[index].rect.x
-            while self.nums[index].rect.x > ori_x - self.box_size // 2:
-                pygame.event.pump()
-                self.nums[index].rect.x -= step
-                self.draw_boxes(win)
-                pygame.time.delay(50)
+    # def split(self, index1):
+    #     index2 = index1 + 1
+    #     self.split_index.append(index1)
+    #     step = 5
+    #     self.num_box_lengths += 1
+    #     if self.nums[0].rect.x - self.box_size // 2 <= 0 or (self.nums[self.size - 1].rect.x + self.box_size) + self.box_size // 2 >= self.width:
+    #         self.resize(index1)
+    #     for index in range (index1 + 1):
+    #         ori_x = self.nums[index].rect.x
+    #         while self.nums[index].rect.x > ori_x - self.box_size // 2:
+    #             pygame.event.pump()
+    #             self.nums[index].rect.x -= step
+    #             self.draw_boxes(win)
+    #             pygame.time.delay(50)
 
-        for index in range (index2, self.size, 1):
-            ori_x = self.nums[index].rect.x
-            while self.nums[index].rect.x < ori_x + self.box_size // 2:
-                pygame.event.pump()
+    #     for index in range (index2, self.size, 1):
+    #         ori_x = self.nums[index].rect.x
+    #         while self.nums[index].rect.x < ori_x + self.box_size // 2:
+    #             pygame.event.pump()
+    #             self.nums[index].rect.x += step
+    #             self.draw_boxes(win)
+    #             pygame.time.delay(50)
+
+    def new_split(self, index1):
+        index2 = index1 + 1
+        step = 5
+        ori_x = self.nums[index1].rect.x
+        while self.nums[index1].rect.x > ori_x - self.box_size // 2:
+            pygame.event.pump()
+            for index in range (index1 + 1):
+                self.nums[index].rect.x -= step
+            self.draw_boxes(win)
+            pygame.time.delay(50)
+
+        ori_x2 = self.nums[index2].rect.x
+        while self.nums[index2].rect.x < ori_x2 + self.box_size // 2:
+            pygame.event.pump()
+            for index in range (index2, self.size, 1):
                 self.nums[index].rect.x += step
-                self.draw_boxes(win)
-                pygame.time.delay(50)
+            self.draw_boxes(win)
+            pygame.time.delay(50)
+
 
     def combine(self, index1):
         index2 = index1 + 1
@@ -316,7 +336,7 @@ class Animation:
 run = True
 
 # unsorted = [random.randint(0, 100) for i in range(15)]
-unsorted = [2,4,3,6,1]
+unsorted = [2,4,3,6,1,88,88,8,8,8,8,8,8,8,8]
 print(unsorted)
 animation = Animation(unsorted)
 animation.draw_boxes(win)
@@ -325,7 +345,11 @@ animation.draw_boxes(win)
 #animation.information_box()
 #animation.bubble_sort(unsorted)
 #animation.quick_sort(0, len(unsorted) - 1, unsorted)
-animation.insertion_sort(unsorted)
+#animation.insertion_sort(unsorted)
+animation.new_split(1)
+animation.new_split(9)
+animation.new_split(6)
+animation.new_split(4)
 print(animation.instructions)
 animation.step_through()
 
