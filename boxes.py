@@ -189,6 +189,19 @@ class Animation:
             self.instructions.append(("swap", step, min_index))
             self.switch(step, min_index, array)
 
+    def insertion_sort(self, array):
+        size = len(array)
+        for index in range(1, size):
+            current_value = array[index]
+            current_position = index
+
+            while current_position > 0 and array[current_position - 1] > current_value:                
+                self.instructions.append(("swap", current_position, current_position - 1))
+                self.switch(current_position, current_position - 1, array)
+                current_position -= 1
+                
+            array[current_position] = current_value
+
     def quick_sort(self, low, high, array):
         if low < high:
             pivot = self.partition(low, high, array)
@@ -302,8 +315,8 @@ class Animation:
 
 run = True
 
-unsorted = [random.randint(0, 100) for i in range(10)]
-#unsorted = [5,4,3,2,1]
+# unsorted = [random.randint(0, 100) for i in range(15)]
+unsorted = [2,4,3,6,1]
 print(unsorted)
 animation = Animation(unsorted)
 animation.draw_boxes(win)
@@ -311,8 +324,8 @@ animation.draw_boxes(win)
 #animation.swap(1,3)
 #animation.information_box()
 #animation.bubble_sort(unsorted)
-animation.quick_sort(0, len(unsorted) - 1, unsorted)
-#animation.selection_sort(unsorted)
+#animation.quick_sort(0, len(unsorted) - 1, unsorted)
+animation.insertion_sort(unsorted)
 print(animation.instructions)
 animation.step_through()
 
