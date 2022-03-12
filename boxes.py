@@ -27,7 +27,7 @@ class Animation:
         self.nums = []
         self.split_index = []
         self.size = len(list_nums)
-        self.num_box_lengths = self.size
+        self.empty_spaces = 0
         self.width, self.height = 1300, 700
         self.space = 10
         self.box_size = int(min((self.width - self.space * (self.size + 1)) / self.size, 60))
@@ -41,23 +41,37 @@ class Animation:
             text_rect.center = (self.left_border + (self.box_size + self.space) * i + self.box_size // 2), (self.top_border + self.box_size // 2)
             self.nums.append(Number(n, rect, text))
 
-    def resize(self, index1):
-        self.scale = self.width / ((self.nums[self.size - 1].rect.x + self.box_size) - self.left_border)
-        self.box_size = int(min(self.box_size * self.scale , 60))
-        self.font = pygame.font.Font('freesansbold.ttf', int(self.box_size / 2))
-        self.space = int(self.box_size // 2)
-        self.left_border = (self.width - ((self.box_size * self.num_box_lengths) + (self.size - 1) * self.space)) // 2
-        self.top_border = (self.height - self.box_size) // 2
+    # def resize(self, index1):
+    #     self.scale = self.width / ((self.nums[self.size - 1].rect.x + self.box_size) - self.left_border)
+    #     self.box_size = int(min(self.box_size * self.scale , 60))
+    #     self.font = pygame.font.Font('freesansbold.ttf', int(self.box_size / 2))
+    #     self.space = int(self.box_size // 2)
+    #     self.left_border = (self.width - ((self.box_size * (self.size + self.empty_spaces)) + (self.size - 1) * self.space)) // 2
+    #     self.top_border = (self.height - self.box_size) // 2
+    #     offset = 0
+    #     for i, n in enumerate(self.nums):
+    #         rect = pygame.Rect((self.left_border + (self.box_size + self.space) * i) + offset, self.top_border, self.box_size, self.box_size)
+    #         text = n.text
+    #         text_rect = text.get_rect()
+    #         text_rect.center = (self.left_border + (self.box_size + self.space) * i + self.box_size // 2), (self.top_border + self.box_size // 2)
+    #         self.nums[i] = Number(n, rect, text)
+    #         if i in self.split_index:
+    #             offset += self.box_size
+
+    def new_resize(self):
+        self.box_size = (self.width - ((self.size + 1) * self.space) - (self.empty_spaces + 2) * self.box_size) // self.size 
+        self.left_border = int((self.width - ((self.size * self.box_size) + ((self.size - 1) * self.space) + (self.empty_spaces * self.box_size))) / 2)
         offset = 0
         for i, n in enumerate(self.nums):
-            rect = pygame.Rect((self.left_border + (self.box_size + self.space) * i) + offset, self.top_border, self.box_size, self.box_size)
-            text = n.text
+            rect = pygame.Rect(self.left_border + offset + (self.box_size + self.space) * i, self.top_border, self.box_size, self.box_size)
+            text = self.font.render(str(self.nums[i].num), True, 'white')
             text_rect = text.get_rect()
             text_rect.center = (self.left_border + (self.box_size + self.space) * i + self.box_size // 2), (self.top_border + self.box_size // 2)
-            self.nums[i] = Number(n, rect, text)
+            self.nums[i] = (Number(self.nums[i].num, rect, text))
             if i in self.split_index:
                 offset += self.box_size
 
+    
     def draw_boxes(self, win):
         win.fill((0, 0, 0))
         for i, n in enumerate(self.nums):
@@ -146,7 +160,14 @@ class Animation:
 
     def new_split(self, index1):
         index2 = index1 + 1
+        self.split_index.append(index1)
+        self.empty_spaces += 1
         step = 5
+        self.left_border = self.left_border - self.box_size // 2
+        if self.nums[0].rect.x - self.box_size // 2 <= 0 or (self.nums[self.size - 1].rect.x + self.box_size) + self.box_size // 2 >= self.width:
+            print(self.box_size)
+            self.new_resize()
+            print(self.box_size)
         ori_x = self.nums[index1].rect.x
         while self.nums[index1].rect.x > ori_x - self.box_size // 2:
             pygame.event.pump()
@@ -347,11 +368,18 @@ animation.draw_boxes(win)
 #animation.quick_sort(0, len(unsorted) - 1, unsorted)
 #animation.insertion_sort(unsorted)
 animation.new_split(1)
-animation.new_split(9)
-animation.new_split(6)
+animation.new_split(2)
+animation.new_split(3)
 animation.new_split(4)
+animation.new_split(5)
+animation.new_split(6)
+animation.new_split(9)
+animation.new_split(11)
+animation.new_split(10)
+animation.new_split(12)
+pygame.time.delay(5000)
 print(animation.instructions)
-animation.step_through()
+#animation.step_through()
 
 '''
 while run:
