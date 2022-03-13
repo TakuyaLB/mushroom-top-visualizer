@@ -159,7 +159,10 @@ class Animation:
     #             pygame.time.delay(50)
 
     def new_split(self, index1):
-        index2 = index1 + 1
+        if index1 == (self.size - 1):
+            index2 = index1
+        else:
+            index2 = index1 + 1
         self.split_index.append(index1)
         self.empty_spaces += 1
         step = 5
@@ -365,19 +368,8 @@ animation.draw_boxes(win)
 #animation.swap(1,3)
 #animation.information_box()
 #animation.bubble_sort(unsorted)
-#animation.quick_sort(0, len(unsorted) - 1, unsorted)
+animation.quick_sort(0, len(unsorted) - 1, unsorted)
 #animation.insertion_sort(unsorted)
-animation.new_split(1)
-animation.new_split(2)
-animation.new_split(3)
-animation.new_split(4)
-animation.new_split(5)
-animation.new_split(6)
-animation.new_split(9)
-animation.new_split(11)
-animation.new_split(10)
-animation.new_split(12)
-pygame.time.delay(5000)
 print(animation.instructions)
 #animation.step_through()
 
