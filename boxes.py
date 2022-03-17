@@ -290,6 +290,7 @@ class Animation:
         array[j] = temp
 
     def step_through(self):
+        self.instructions.append(("swap", 0, 0))
         x = 0
         while True:
             (l, i, j) = self.instructions[x]
