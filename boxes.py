@@ -249,7 +249,8 @@ class Animation:
     def quick_sort(self, low, high, array):
         if low < high:
             pivot = self.partition(low, high, array)
-            self.instructions.append(("split", pivot - 1, 0))
+            if pivot != 0:
+                self.instructions.append(("split", pivot - 1, 0))
             self.instructions.append(("split", pivot, 0))
             self.quick_sort(low, pivot - 1, array)
             self.quick_sort(pivot + 1, high, array)
@@ -295,7 +296,7 @@ class Animation:
                 if l == "swap":
                     self.swap(i, j)
                 if l == "split":
-                    self.split(i)
+                    self.new_split(i)
                 if x < len(self.instructions) - 1:
                     x += 1
             if self.keypress() == "previous" and x != 0:
@@ -361,6 +362,9 @@ run = True
 
 # unsorted = [random.randint(0, 100) for i in range(15)]
 unsorted = [2,4,3,6,1]
+unsorted = [random.randint(0, 100) for i in range(15)]
+#unsorted = [2,4,3,6,1,88,88,8,8,8,8,8,8,8,8]
+#unsorted = [15, 9, 10, 2, 8, 5, 1, 16, 12]
 print(unsorted)
 animation = Animation(unsorted)
 animation.draw_boxes(win)
@@ -368,8 +372,9 @@ animation.draw_boxes(win)
 #animation.swap(1,3)
 #animation.information_box()
 #animation.bubble_sort(unsorted)
-animation.quick_sort(0, len(unsorted) - 1, unsorted)
+#animation.quick_sort(0, len(unsorted) - 1, unsorted) #splitting spacing issues, sorts and gets operations but doesnt carry them all out 
 #animation.insertion_sort(unsorted)
+animation.selection_sort(unsorted)
 print(animation.instructions)
 animation.step_through()
 
