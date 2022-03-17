@@ -67,6 +67,7 @@ class Animation:
             text = self.font.render(str(self.nums[i].num), True, 'white')
             text_rect = text.get_rect()
             text_rect.center = (self.left_border + (self.box_size + self.space) * i + self.box_size // 2), (self.top_border + self.box_size // 2)
+            self.font = pygame.font.Font('freesansbold.ttf', int(self.box_size / 2))
             self.nums[i] = (Number(self.nums[i].num, rect, text))
             if i in self.split_index:
                 offset += self.box_size
@@ -372,9 +373,9 @@ animation.draw_boxes(win)
 #animation.swap(1,3)
 #animation.information_box()
 #animation.bubble_sort(unsorted)
-#animation.quick_sort(0, len(unsorted) - 1, unsorted) #splitting spacing issues, sorts and gets operations but doesnt carry them all out 
+animation.quick_sort(0, len(unsorted) - 1, unsorted) #splitting spacing issues, sorts and gets operations but doesnt carry them all out 
 #animation.insertion_sort(unsorted)
-animation.selection_sort(unsorted)
+# animation.selection_sort(unsorted)
 print(animation.instructions)
 animation.step_through()
 
