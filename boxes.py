@@ -360,18 +360,18 @@ class Animation:
 run = True
 
 # unsorted = [random.randint(0, 100) for i in range(15)]
-unsorted = [2,4,3,6,1,88,88,8,8,8,8,8,8,8,8]
+unsorted = [2,4,3,6,1]
 print(unsorted)
 animation = Animation(unsorted)
 animation.draw_boxes(win)
-#animation.split(1)
+
 #animation.swap(1,3)
 #animation.information_box()
 #animation.bubble_sort(unsorted)
 animation.quick_sort(0, len(unsorted) - 1, unsorted)
 #animation.insertion_sort(unsorted)
 print(animation.instructions)
-#animation.step_through()
+animation.step_through()
 
 '''
 while run:
