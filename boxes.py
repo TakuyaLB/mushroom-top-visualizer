@@ -69,7 +69,7 @@ class Animation:
             text_rect.center = (self.left_border + (self.box_size + self.space) * i + self.box_size // 2), (self.top_border + self.box_size // 2)
             self.font = pygame.font.Font('freesansbold.ttf', int(self.box_size / 2))
             self.nums[i] = (Number(self.nums[i].num, rect, text))
-            if i in self.split_index:
+            if i in self.split_index and i != self.split_index[-1]:
                 offset += self.box_size
 
     
@@ -188,8 +188,39 @@ class Animation:
             self.draw_boxes(win)
             pygame.time.delay(50)
 
-
     def combine(self, index1):
+        if index1 == (self.size - 1):
+            index2 = index1
+        else:
+            index2 = index1 + 1
+        self.empty_spaces -= 1
+        self.split_index.remove(index1)
+        step = 5
+        self.left_border = self.left_border + self.box_size // 2
+        # if self.nums[0].rect.x - self.box_size // 2 <= 0 or (self.nums[self.size - 1].rect.x + self.box_size) + self.box_size // 2 >= self.width:
+        #     print(self.box_size)
+        #     self.new_resize()
+        #     print(self.box_size)
+        ori_x = self.nums[index1].rect.x
+        while self.nums[index1].rect.x < ori_x + self.box_size // 2:
+            pygame.event.pump()
+            for index in range (index1 + 1):
+                self.nums[index].rect.x += step
+            self.draw_boxes(win)
+            pygame.time.delay(50)
+
+        ori_x2 = self.nums[index2].rect.x
+        while self.nums[index2].rect.x > ori_x2 - self.box_size // 2:
+            pygame.event.pump()
+            for index in range (index2, self.size, 1):
+                self.nums[index].rect.x -= step
+            self.draw_boxes(win)
+            pygame.time.delay(50)
+        # if len(self.split_index) > 0: 
+        #     self.new_resize()
+
+
+    def old_combine(self, index1):
         index2 = index1 + 1
         step = 5
         self.num_box_lengths -= 1
@@ -363,22 +394,40 @@ class Animation:
 run = True
 
 # unsorted = [random.randint(0, 100) for i in range(15)]
-unsorted = [2,4,3,6,1]
+# unsorted = [2,4,3,6,1]
 unsorted = [random.randint(0, 100) for i in range(15)]
 #unsorted = [2,4,3,6,1,88,88,8,8,8,8,8,8,8,8]
 #unsorted = [15, 9, 10, 2, 8, 5, 1, 16, 12]
 print(unsorted)
 animation = Animation(unsorted)
 animation.draw_boxes(win)
+animation.new_split(1)
+animation.new_split(2)
+animation.new_split(3)
+animation.new_split(4)
+animation.new_split(5)
+animation.new_split(6)
+animation.new_split(7)
+animation.new_split(8)
+animation.new_split(9)
+animation.combine(1)
+animation.combine(2)
+animation.combine(3)
+animation.combine(4)
+animation.combine(5)
+animation.combine(6)
+animation.combine(7)
+animation.combine(8)
+animation.combine(9)
 
 #animation.swap(1,3)
 #animation.information_box()
 #animation.bubble_sort(unsorted)
-animation.quick_sort(0, len(unsorted) - 1, unsorted) #splitting spacing issues, sorts and gets operations but doesnt carry them all out 
+# animation.quick_sort(0, len(unsorted) - 1, unsorted) #splitting spacing issues, sorts and gets operations but doesnt carry them all out 
 #animation.insertion_sort(unsorted)
 # animation.selection_sort(unsorted)
 print(animation.instructions)
-animation.step_through()
+# animation.step_through()
 
 '''
 while run:
