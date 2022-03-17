@@ -325,14 +325,15 @@ class Animation:
         x = 0
         while True:
             (l, i, j) = self.instructions[x]
-            if self.keypress() == "next" and x != len(self.instructions):
+            key = self.keypress()
+            if key == "next" and x != len(self.instructions):
                 if l == "swap":
                     self.swap(i, j)
                 if l == "split":
                     self.new_split(i)
                 if x < len(self.instructions) - 1:
                     x += 1
-            if self.keypress() == "previous" and x != 0:
+            if key == "previous" and x != 0:
                 (lprev, iprev, jprev) = self.instructions[x - 1]
                 if lprev == "swap":
                     self.swap(iprev, jprev)
@@ -344,11 +345,13 @@ class Animation:
         while True:
             self.information_box()
             for event in pygame.event.get():
+                print(event)
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RIGHT:
+                        print('right')
                         self.information_box()
                         return "next"
                     if event.key == pygame.K_LEFT:
@@ -422,8 +425,8 @@ animation.combine(9)
 
 #animation.swap(1,3)
 #animation.information_box()
-#animation.bubble_sort(unsorted)
-# animation.quick_sort(0, len(unsorted) - 1, unsorted) #splitting spacing issues, sorts and gets operations but doesnt carry them all out 
+animation.bubble_sort(unsorted)
+# animation.quick_sort(0, len(unsorted) - 1, unsorted) #splitting spacing issues, sorts and gets operations but doesnt carry them all out
 #animation.insertion_sort(unsorted)
 # animation.selection_sort(unsorted)
 print(animation.instructions)
