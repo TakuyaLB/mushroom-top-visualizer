@@ -241,18 +241,38 @@ class Animation:
             self.instructions.append(("swap", low, i - 1))
             self.switch(low, i - 1, array)
         return i - 1
-    '''
-    def merge_sort(self, array):
-        if len(array) > 2:
-            middle = len(array)//2
-            self.merge_sort(array[:middle])
-            self.merge_sort(array[middle:])
-        else:
-            self.merge(array[:middle], array[middle:])
-    
-    def merge(self, array1, array2):
-        '''
-    
+
+    def mergeSort(self, array):
+        arrayLength = len(array)
+
+        if arrayLength == 1:
+            return array
+
+        middle = arrayLength // 2
+
+        leftPartition = self.mergeSort(array[:middle])
+        rightPartition = self.mergeSort(array[middle:])
+
+        
+        return self.mergeFun(leftPartition, rightPartition)
+
+    def mergeFun(left, right):
+        output = []
+        i = j = 0
+
+        while i < len(left) and j < len(right):
+            if left[i] < right[j]:
+                output.append(left[i])
+                i += 1
+            else:
+                output.append(right[j])
+                j += 1
+
+        output.extend(left[i:])
+        output.extend(right[j:])
+
+        return output
+
     def switch(self, i, j, array):
         temp = array[i]
         array[i] = array[j]
