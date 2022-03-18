@@ -169,6 +169,7 @@ class Animation:
             self.draw_boxes(win)
             pygame.time.delay(50)
 
+
         ori_x2 = self.nums[index2].rect.x
         while self.nums[index2].rect.x > ori_x2 - self.box_size // 2:
             pygame.event.pump()
@@ -176,8 +177,8 @@ class Animation:
                 self.nums[index].rect.x -= step
             self.draw_boxes(win)
             pygame.time.delay(50)
-        # if len(self.split_index) > 0: 
-        #     self.new_resize()            
+        if len(self.split_index) > 1: 
+            self.new_resize()            
 
     def bubble_sort(self, array):
         is_sorted = False
