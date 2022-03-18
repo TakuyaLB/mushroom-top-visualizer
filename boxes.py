@@ -47,10 +47,10 @@ class Animation:
         offset = 0
         for i, n in enumerate(self.nums):
             rect = pygame.Rect(self.left_border + offset + (self.box_size + self.space) * i, self.top_border, self.box_size, self.box_size)
+            self.font = pygame.font.Font('freesansbold.ttf', int(self.box_size / 2))
             text = self.font.render(str(self.nums[i].num), True, 'white')
             text_rect = text.get_rect()
             text_rect.center = (self.left_border + (self.box_size + self.space) * i + self.box_size // 2), (self.top_border + self.box_size // 2)
-            self.font = pygame.font.Font('freesansbold.ttf', int(self.box_size / 2))
             self.nums[i] = (Number(self.nums[i].num, rect, text))
             if i in self.split_index and i != self.split_index[-1]:
                 offset += self.box_size
@@ -148,6 +148,7 @@ class Animation:
             self.draw_boxes(win)
             pygame.time.delay(50)
 
+
     def combine(self, index1):
         if index1 == (self.size - 1):
             index2 = index1
@@ -177,8 +178,8 @@ class Animation:
                 self.nums[index].rect.x -= step
             self.draw_boxes(win)
             pygame.time.delay(50)
-        if len(self.split_index) > 1: 
-            self.new_resize()            
+        # if len(self.split_index) > 1:
+        #     self.new_resize()
 
     def bubble_sort(self, array):
         is_sorted = False
@@ -341,35 +342,14 @@ unsorted = [random.randint(0, 100) for i in range(15)]
 print(unsorted)
 animation = Animation(unsorted)
 animation.draw_boxes(win)
-animation.new_split(1)
-animation.new_split(2)
-animation.new_split(3)
-animation.new_split(4)
-animation.new_split(5)
-animation.new_split(6)
-animation.new_split(7)
-animation.new_split(8)
-animation.new_split(9)
-animation.combine(1)
-animation.combine(2)
-animation.combine(3)
-animation.combine(4)
-animation.combine(5)
-animation.combine(6)
-animation.combine(7)
-animation.combine(8)
-animation.combine(9)
+stop = 3
+for i in range(9, stop-1, -1):
+    animation.new_split(i)
+for i in range(stop, 10, 1):
+    animation.combine(i)
 
-#animation.swap(1,3)
-#animation.information_box()
-animation.bubble_sort(unsorted)
-# animation.quick_sort(0, len(unsorted) - 1, unsorted) #splitting spacing issues, sorts and gets operations but doesnt carry them all out
-#animation.insertion_sort(unsorted)
-# animation.selection_sort(unsorted)
-print(animation.instructions)
-# animation.step_through()
+animation.new_resize()
 
-'''
 while run:
     pygame.time.delay(10)
 
@@ -384,8 +364,7 @@ while run:
                 animation.keypress = "previous"
             if event.key == pygame.K_m:
                 run = False
-'''
 
-    #animation.draw_boxes(win)
+    animation.draw_boxes(win)
 
 pygame.quit()
