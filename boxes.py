@@ -41,23 +41,6 @@ class Animation:
             text_rect.center = (self.left_border + (self.box_size + self.space) * i + self.box_size // 2), (self.top_border + self.box_size // 2)
             self.nums.append(Number(n, rect, text))
 
-    # def resize(self, index1):
-    #     self.scale = self.width / ((self.nums[self.size - 1].rect.x + self.box_size) - self.left_border)
-    #     self.box_size = int(min(self.box_size * self.scale , 60))
-    #     self.font = pygame.font.Font('freesansbold.ttf', int(self.box_size / 2))
-    #     self.space = int(self.box_size // 2)
-    #     self.left_border = (self.width - ((self.box_size * (self.size + self.empty_spaces)) + (self.size - 1) * self.space)) // 2
-    #     self.top_border = (self.height - self.box_size) // 2
-    #     offset = 0
-    #     for i, n in enumerate(self.nums):
-    #         rect = pygame.Rect((self.left_border + (self.box_size + self.space) * i) + offset, self.top_border, self.box_size, self.box_size)
-    #         text = n.text
-    #         text_rect = text.get_rect()
-    #         text_rect.center = (self.left_border + (self.box_size + self.space) * i + self.box_size // 2), (self.top_border + self.box_size // 2)
-    #         self.nums[i] = Number(n, rect, text)
-    #         if i in self.split_index:
-    #             offset += self.box_size
-
     def new_resize(self):
         self.box_size = (self.width - ((self.size + 1) * self.space) - (self.empty_spaces + 2) * self.box_size) // self.size 
         self.left_border = int((self.width - ((self.size * self.box_size) + ((self.size - 1) * self.space) + (self.empty_spaces * self.box_size))) / 2)
@@ -136,29 +119,6 @@ class Animation:
         self.nums[index1] = self.nums[index2]
         self.nums[index2] = tmp
 
-    # def split(self, index1):
-    #     index2 = index1 + 1
-    #     self.split_index.append(index1)
-    #     step = 5
-    #     self.num_box_lengths += 1
-    #     if self.nums[0].rect.x - self.box_size // 2 <= 0 or (self.nums[self.size - 1].rect.x + self.box_size) + self.box_size // 2 >= self.width:
-    #         self.resize(index1)
-    #     for index in range (index1 + 1):
-    #         ori_x = self.nums[index].rect.x
-    #         while self.nums[index].rect.x > ori_x - self.box_size // 2:
-    #             pygame.event.pump()
-    #             self.nums[index].rect.x -= step
-    #             self.draw_boxes(win)
-    #             pygame.time.delay(50)
-
-    #     for index in range (index2, self.size, 1):
-    #         ori_x = self.nums[index].rect.x
-    #         while self.nums[index].rect.x < ori_x + self.box_size // 2:
-    #             pygame.event.pump()
-    #             self.nums[index].rect.x += step
-    #             self.draw_boxes(win)
-    #             pygame.time.delay(50)
-
     def new_split(self, index1):
         if index1 == (self.size - 1):
             index2 = index1
@@ -217,31 +177,7 @@ class Animation:
             self.draw_boxes(win)
             pygame.time.delay(50)
         # if len(self.split_index) > 0: 
-        #     self.new_resize()
-
-
-    def old_combine(self, index1):
-        index2 = index1 + 1
-        step = 5
-        self.num_box_lengths -= 1
-        # if self.nums[0].rect.x + self.box_size // 2 > 10 or (self.nums[self.size - 1].rect.x + self.box_size) < self.width - 10:
-        #     self.resize(index1)
-        for index in range (index1 + 1):
-            ori_x = self.nums[index].rect.x
-            while self.nums[index].rect.x < ori_x + self.box_size // 2:
-                pygame.event.pump()
-                self.nums[index].rect.x += step
-                self.draw_boxes(win)
-                pygame.time.delay(50)
-
-        for index in range (index2, self.size, 1):
-            ori_x = self.nums[index].rect.x
-            while self.nums[index].rect.x > ori_x - self.box_size // 2:
-                pygame.event.pump()
-                self.nums[index].rect.x -= step
-                self.draw_boxes(win)
-                pygame.time.delay(50)
-            
+        #     self.new_resize()            
 
     def bubble_sort(self, array):
         is_sorted = False
