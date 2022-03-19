@@ -1,11 +1,9 @@
-from turtle import width
 import pygame
 from dataclasses import dataclass
 import random
 import sys
 
 pygame.init()
-
 
 win = pygame.display.set_mode((1300, 700))
 
@@ -78,7 +76,6 @@ class Animation:
         else:
             rect1 = self.nums[index2].rect
             rect2 = self.nums[index1].rect
-
 
         step = 10
         dist_to_target = self.box_size * 1.5
@@ -273,6 +270,34 @@ class Animation:
 
         return output
 
+    def heapifyFun(self, array, n, i):
+        largest = i
+        left = 2 * i + 1
+        right = 2 * i + 2
+        if left < n and array[i] < array[left]:
+            largest = left
+        if right < n and array[largest] < array[right]:
+            largest = right
+        if largest != i:
+            self.instructions.append(("swap", i, largest))
+            self.switch(i, largest, array)
+            self.heapifyFun(array, n, largest)
+    
+    def heap_sort(self, array):
+
+        # If the user input a sorted array, just return
+        # No need to do the swap animation
+        if array == sorted(array):
+            return
+
+        n = len(array)
+        for i in range(n // 2 - 1, -1, -1):
+            self.heapifyFun(array, n, i)
+        for i in range(n - 1, 0, -1):
+            self.instructions.append(("swap", i, 0))
+            self.switch(i, 0, array)
+            self.heapifyFun(array, i, 0)
+
     def switch(self, i, j, array):
         temp = array[i]
         array[i] = array[j]
@@ -303,13 +328,11 @@ class Animation:
         while True:
             self.information_box()
             for event in pygame.event.get():
-                print(event)
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RIGHT:
-                        print('right')
                         self.information_box()
                         return "next"
                     if event.key == pygame.K_LEFT:
@@ -350,41 +373,21 @@ class Animation:
  
         pygame.display.update()
 
-
-
-run = True
-
-# unsorted = [random.randint(0, 100) for i in range(15)]
-# unsorted = [2,4,3,6,1]
-unsorted = [random.randint(0, 100) for i in range(15)]
-#unsorted = [2,4,3,6,1,88,88,8,8,8,8,8,8,8,8]
-#unsorted = [15, 9, 10, 2, 8, 5, 1, 16, 12]
+# unsorted = [random.randint(0, 100) for i in range(10)]
+unsorted = [2,4,3,6,1]
 print(unsorted)
 animation = Animation(unsorted)
 animation.draw_boxes(win)
-stop = 3
-for i in range(9, stop-1, -1):
-    animation.new_split(i)
-for i in range(stop, 10, 1):
-    animation.combine(i)
+animation.heap_sort(unsorted)
+print(animation.instructions)
+animation.step_through()
 
-animation.new_resize()
+# stop = 3
+# for i in range(9, stop-1, -1):
+#     animation.new_split(i)
+# for i in range(stop, 10, 1):
+#     animation.combine(i)
 
-while run:
-    pygame.time.delay(10)
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            run = False
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_RIGHT:
-                print("next")
-                animation.keypress = "next"
-            if event.key == pygame.K_LEFT:
-                animation.keypress = "previous"
-            if event.key == pygame.K_m:
-                run = False
-
-    animation.draw_boxes(win)
+# animation.new_resize()
 
 pygame.quit()
