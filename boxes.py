@@ -1,11 +1,9 @@
-from turtle import width
 import pygame
 from dataclasses import dataclass
 import random
 import sys
 
 pygame.init()
-
 
 win = pygame.display.set_mode((1300, 700))
 
@@ -78,7 +76,6 @@ class Animation:
         else:
             rect1 = self.nums[index2].rect
             rect2 = self.nums[index1].rect
-
 
         step = 10
         dist_to_target = self.box_size * 1.5
@@ -295,18 +292,66 @@ class Animation:
             self.instructions.append(("swap", low, i - 1))
             self.switch(low, i - 1, array)
         return i - 1
-    '''
-    def merge_sort(self, array):
-        if len(array) > 2:
-            middle = len(array)//2
-            self.merge_sort(array[:middle])
-            self.merge_sort(array[middle:])
-        else:
-            self.merge(array[:middle], array[middle:])
+
+    def mergeSort(self, array):
+        arrayLength = len(array)
+
+        if arrayLength == 1:
+            return array
+
+        middle = arrayLength // 2
+
+        leftPartition = self.mergeSort(array[:middle])
+        rightPartition = self.mergeSort(array[middle:])
+
+        
+        return self.mergeFun(leftPartition, rightPartition)
+
+    def mergeFun(left, right):
+        output = []
+        i = j = 0
+
+        while i < len(left) and j < len(right):
+            if left[i] < right[j]:
+                output.append(left[i])
+                i += 1
+            else:
+                output.append(right[j])
+                j += 1
+
+        output.extend(left[i:])
+        output.extend(right[j:])
+
+        return output
+
+    def heapifyFun(self, array, n, i):
+        largest = i
+        left = 2 * i + 1
+        right = 2 * i + 2
+        if left < n and array[i] < array[left]:
+            largest = left
+        if right < n and array[largest] < array[right]:
+            largest = right
+        if largest != i:
+            self.instructions.append(("swap", i, largest))
+            self.switch(i, largest, array)
+            self.heapifyFun(array, n, largest)
     
-    def merge(self, array1, array2):
-        '''
-    
+    def heap_sort(self, array):
+
+        # If the user input a sorted array, just return
+        # No need to do the swap animation
+        if array == sorted(array):
+            return
+
+        n = len(array)
+        for i in range(n // 2 - 1, -1, -1):
+            self.heapifyFun(array, n, i)
+        for i in range(n - 1, 0, -1):
+            self.instructions.append(("swap", i, 0))
+            self.switch(i, 0, array)
+            self.heapifyFun(array, i, 0)
+
     def switch(self, i, j, array):
         temp = array[i]
         array[i] = array[j]
@@ -337,13 +382,11 @@ class Animation:
         while True:
             self.information_box()
             for event in pygame.event.get():
-                print(event)
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RIGHT:
-                        print('right')
                         self.information_box()
                         return "next"
                     if event.key == pygame.K_LEFT:
