@@ -148,6 +148,60 @@ class Animation:
             self.draw_boxes(win)
             pygame.time.delay(50)
 
+    def translate(self, nums, x, y, steps, time):
+        delay = time // steps
+        original_rects = [num.rect.copy() for num in nums]
+        for i in range(1, steps + 1):
+            pygame.event.pump()
+            new_x = i / steps * x
+            new_y = i / steps * y
+            for i, num in enumerate(nums):
+                num.rect.topleft = (new_x + original_rects[i].x, new_y + original_rects[i].y)
+            self.draw_boxes(win)
+            pygame.time.delay(delay)
+
+    def translate_absolute(self, num, x, y, steps, time):
+        original_pos = num.rect.copy()
+        self.translate([num], x - original_pos.x, y - original_pos.y, steps, time)
+
+    def split(self, arr):
+        mid = len(arr) // 2
+        left = arr[:mid]
+        self.translate(left, 0, -self.space - self.box_size, 20, 250)
+        right = arr[mid:]
+        self.translate(right, 0, -self.space - self.box_size, 20, 250)
+        return left, right
+
+    def merge(self, a, b):
+        arr = []
+        a_idx = 0
+        b_idx = 0
+        leftmost = a[0].rect.left
+        top = a[0].rect.top + self.space + self.box_size
+        for i in range(len(a) + len(b)):
+            if a_idx >= len(a):
+                arr.append(b[b_idx])
+                b_idx += 1
+            elif b_idx >= len(b):
+                arr.append(a[a_idx])
+                a_idx += 1
+            elif a[a_idx].num <= b[b_idx].num:
+                arr.append(a[a_idx])
+                a_idx += 1
+            else:
+                arr.append(b[b_idx])
+                b_idx += 1
+            self.translate_absolute(arr[i], leftmost + (self.space + self.box_size) * i, top, 20, 250)
+
+        return arr
+
+    def merge_sort(self, arr):
+        if len(arr) == 1:
+            return arr
+        left, right = self.split(arr)
+        left = self.merge_sort(left)
+        right = self.merge_sort(right)
+        return self.merge(left, right)
 
     def combine(self, index1):
         if index1 == (self.size - 1):
@@ -334,22 +388,29 @@ class Animation:
 
 run = True
 
-# unsorted = [random.randint(0, 100) for i in range(15)]
-# unsorted = [2,4,3,6,1]
 unsorted = [random.randint(0, 100) for i in range(15)]
+# unsorted = [2, 3, 1]
+# unsorted = [1, 3, 5, 7, 2, 4, 6, 8, 9]
 #unsorted = [2,4,3,6,1,88,88,8,8,8,8,8,8,8,8]
 #unsorted = [15, 9, 10, 2, 8, 5, 1, 16, 12]
 print(unsorted)
 animation = Animation(unsorted)
 animation.draw_boxes(win)
-stop = 3
-for i in range(9, stop-1, -1):
-    animation.new_split(i)
-for i in range(stop, 10, 1):
-    animation.combine(i)
 
-animation.new_resize()
+while True:
+    pygame.time.delay(10)
+    b = False
+    for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                b = True
+    if b:
+        break
+    animation.draw_boxes(win)
 
+nums = animation.merge_sort(animation.nums)
+print([num.num for num in nums])
+print('done')
 while run:
     pygame.time.delay(10)
 
