@@ -1,20 +1,32 @@
 import pygame
 from dataclasses import dataclass
+from enum import Enum
 import random
 import sys
+import copy
 
 pygame.init()
 
+# win = pygame.display.set_mode((1300, 700), pygame.RESIZABLE)
 win = pygame.display.set_mode((1300, 700))
 
 pygame.display.set_caption("Boxes")
 
 
-@dataclass
+class Signal(Enum):
+    STEP = 1
+    MOVEMENT = 2
+
+
 class Number:
-    num: int
-    rect: pygame.Rect
-    text: pygame.Surface
+    num_objs = 0
+
+    def __init__(self, num: int, rect: pygame.Rect, text: pygame.Surface):
+        self.num = num
+        self.rect = rect
+        self.text = text
+        self.id = self.num_objs
+        self.num_objs += 1
 
 
 class Animation:
@@ -28,6 +40,7 @@ class Animation:
         self.empty_spaces = 0
         self.width, self.height = 1300, 700
         self.space = 10
+        self.fps = 60
         self.box_size = int(min((self.width - self.space * (self.size + 1)) / self.size, 60))
         self.font = pygame.font.Font('freesansbold.ttf', int(self.box_size / 2))
         self.left_border = (self.width - ((self.box_size * self.size) + (self.size - 1) * self.space)) // 2
@@ -145,60 +158,57 @@ class Animation:
             self.draw_boxes(win)
             pygame.time.delay(50)
 
-    def translate(self, nums, x, y, steps, time):
-        delay = time // steps
+    def translate(self, nums, x, y, time):
+        steps = int(self.fps * time / 1000)
         original_rects = [num.rect.copy() for num in nums]
         for i in range(1, steps + 1):
-            pygame.event.pump()
             new_x = i / steps * x
             new_y = i / steps * y
             for i, num in enumerate(nums):
                 num.rect.topleft = (new_x + original_rects[i].x, new_y + original_rects[i].y)
-            self.draw_boxes(win)
-            pygame.time.delay(delay)
+            yield
+        yield signal.MOVEMENT
 
-    def translate_absolute(self, num, x, y, steps, time):
+    def translate_absolute(self, num, x, y, time):
         original_pos = num.rect.copy()
-        self.translate([num], x - original_pos.x, y - original_pos.y, steps, time)
+        yield from self.translate([num], x - original_pos.x, y - original_pos.y, time)
 
-    def split(self, arr):
-        mid = len(arr) // 2
-        left = arr[:mid]
-        self.translate(left, 0, -self.space - self.box_size, 20, 250)
-        right = arr[mid:]
-        self.translate(right, 0, -self.space - self.box_size, 20, 250)
-        return left, right
-
-    def merge(self, a, b):
-        arr = []
+    def merge(self, arr, a, b):
         a_idx = 0
         b_idx = 0
         leftmost = a[0].rect.left
         top = a[0].rect.top + self.space + self.box_size
         for i in range(len(a) + len(b)):
             if a_idx >= len(a):
-                arr.append(b[b_idx])
+                arr[i] = b[b_idx]
                 b_idx += 1
             elif b_idx >= len(b):
-                arr.append(a[a_idx])
+                arr[i] = a[a_idx]
                 a_idx += 1
             elif a[a_idx].num <= b[b_idx].num:
-                arr.append(a[a_idx])
+                arr[i] = a[a_idx]
                 a_idx += 1
             else:
-                arr.append(b[b_idx])
+                arr[i] = b[b_idx]
                 b_idx += 1
-            self.translate_absolute(arr[i], leftmost + (self.space + self.box_size) * i, top, 20, 250)
+            yield from self.translate_absolute(arr[i], leftmost + (self.space + self.box_size) * i, top, 250)
 
-        return arr
 
-    def merge_sort(self, arr):
+    def merge_sort(self, arr=None):
+        if arr is None:
+            yield Signal.STEP
+            arr = self.nums
         if len(arr) == 1:
             return arr
-        left, right = self.split(arr)
-        left = self.merge_sort(left)
-        right = self.merge_sort(right)
-        return self.merge(left, right)
+        mid = len(arr) // 2
+        left = arr[:mid]
+        right = arr[mid:]
+        yield from self.translate(arr, 0, -self.space - self.box_size, 250)
+        yield Signal.STEP
+        yield from self.merge_sort(left)
+        yield from self.merge_sort(right)
+        yield from self.merge(arr, left, right)
+        yield Signal.STEP
 
     def combine(self, index1):
         if index1 == (self.size - 1):
@@ -292,37 +302,6 @@ class Animation:
             self.instructions.append(("swap", low, i - 1))
             self.switch(low, i - 1, array)
         return i - 1
-
-    def mergeSort(self, array):
-        arrayLength = len(array)
-
-        if arrayLength == 1:
-            return array
-
-        middle = arrayLength // 2
-
-        leftPartition = self.mergeSort(array[:middle])
-        rightPartition = self.mergeSort(array[middle:])
-
-        
-        return self.mergeFun(leftPartition, rightPartition)
-
-    def mergeFun(left, right):
-        output = []
-        i = j = 0
-
-        while i < len(left) and j < len(right):
-            if left[i] < right[j]:
-                output.append(left[i])
-                i += 1
-            else:
-                output.append(right[j])
-                j += 1
-
-        output.extend(left[i:])
-        output.extend(right[j:])
-
-        return output
 
     def heapifyFun(self, array, n, i):
         largest = i
@@ -429,7 +408,6 @@ class Animation:
 
 
 
-run = True
 
 unsorted = [random.randint(0, 100) for i in range(15)]
 # unsorted = [2, 3, 1]
@@ -438,21 +416,40 @@ unsorted = [random.randint(0, 100) for i in range(15)]
 #unsorted = [15, 9, 10, 2, 8, 5, 1, 16, 12]
 print(unsorted)
 animation = Animation(unsorted)
+clock = pygame.time.Clock()
 animation.draw_boxes(win)
-
-while True:
-    pygame.time.delay(10)
-    b = False
+run = True
+num_history = []
+for signal in animation.merge_sort():
+    if signal == Signal.STEP:
+        print('waiting for keypress')
+        pause = True
+        while pause:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RIGHT:
+                        pause = False
+                    elif event.key == pygame.K_LEFT:
+                        pause = False
+                    if event.key == pygame.K_m:
+                        pygame.quit()
+                        sys.exit()
+        continue
+    elif signal == Signal.MOVEMENT:
+        num_history.append(copy.deepcopy(animation.nums))
     for event in pygame.event.get():
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
-                b = True
-    if b:
+        if event.type == pygame.QUIT:
+            run = False
+    if not run:
         break
     animation.draw_boxes(win)
+    clock.tick(animation.fps)
 
-nums = animation.merge_sort(animation.nums)
-print([num.num for num in nums])
+
+print([num.num for num in animation.nums])
 print('done')
 while run:
     pygame.time.delay(10)
