@@ -1,14 +1,14 @@
 import pygame
 from dataclasses import dataclass
-import random
-import sys
-
+#import random
+#import sys
+'''
 pygame.init()
 
 win = pygame.display.set_mode((1300, 700))
 
 pygame.display.set_caption("Boxes")
-
+'''
 
 @dataclass
 class Number:
@@ -18,7 +18,8 @@ class Number:
 
 
 class Animation:
-    def __init__(self, list_nums):
+    def __init__(self, list_nums, win):
+        self.win = win
         #self.keypress = ""
         self.scale = 0
         self.instructions = []
@@ -54,15 +55,15 @@ class Animation:
                 offset += self.box_size
 
     
-    def draw_boxes(self, win):
-        win.fill((0, 0, 0))
+    def draw_boxes(self):
+        self.win.fill((0, 0, 0))
         for i, n in enumerate(self.nums):
             rect = n.rect
-            pygame.draw.rect(win, 'red', rect)
+            pygame.draw.rect(self.win, 'red', rect)
             text = n.text
             text_rect = text.get_rect()
             text_rect.center = rect.center
-            win.blit(text, text_rect)
+            self.win.blit(text, text_rect)
         pygame.display.update()
 
     def swap(self, index1, index2):
@@ -85,7 +86,7 @@ class Animation:
             pygame.event.pump()
             rect1.y += step
             rect2.y -= step
-            self.draw_boxes(win)
+            self.draw_boxes()
             pygame.time.delay(50)
 
         ori_x = rect1.x
@@ -97,7 +98,7 @@ class Animation:
             pygame.event.pump()
             rect1.x += step
             rect2.x -= step
-            self.draw_boxes(win)
+            self.draw_boxes()
             pygame.time.delay(50)
 
         rect1.x = target_x1
@@ -109,7 +110,7 @@ class Animation:
             pygame.event.pump()
             rect1.y -= step
             rect2.y += step
-            self.draw_boxes(win)
+            self.draw_boxes()
             pygame.time.delay(50)
 
         tmp = self.nums[index1]
@@ -134,7 +135,7 @@ class Animation:
             pygame.event.pump()
             for index in range (index1 + 1):
                 self.nums[index].rect.x -= step
-            self.draw_boxes(win)
+            self.draw_boxes(self.win)
             pygame.time.delay(50)
 
         ori_x2 = self.nums[index2].rect.x
@@ -142,7 +143,7 @@ class Animation:
             pygame.event.pump()
             for index in range (index2, self.size, 1):
                 self.nums[index].rect.x += step
-            self.draw_boxes(win)
+            self.draw_boxes(self.win)
             pygame.time.delay(50)
 
 
@@ -164,7 +165,7 @@ class Animation:
             pygame.event.pump()
             for index in range (index1 + 1):
                 self.nums[index].rect.x += step
-            self.draw_boxes(win)
+            self.draw_boxes(self.win)
             pygame.time.delay(50)
 
 
@@ -173,7 +174,7 @@ class Animation:
             pygame.event.pump()
             for index in range (index2, self.size, 1):
                 self.nums[index].rect.x -= step
-            self.draw_boxes(win)
+            self.draw_boxes(self.win)
             pygame.time.delay(50)
         # if len(self.split_index) > 1:
         #     self.new_resize()
@@ -221,7 +222,6 @@ class Animation:
             self.instructions.append(("split", pivot, 0))
             self.quick_sort(low, pivot - 1, array)
             self.quick_sort(pivot + 1, high, array)
-        print(array)
     
     def partition(self, low, high, array):
         i = low + 1
@@ -329,8 +329,7 @@ class Animation:
             self.information_box()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+                    pygame.display.quit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RIGHT:
                         self.information_box()
@@ -339,8 +338,7 @@ class Animation:
                         self.information_box()
                         return "previous"
                     if event.key == pygame.K_m:
-                        pygame.quit()
-                        sys.exit()
+                        pygame.display.quit()
 
     def information_box(self):
         # Create A Box
@@ -348,7 +346,7 @@ class Animation:
         height = 700
         x = width - 250
         y = height - 675
-        pygame.draw.rect(win, "white", (x,y,200,80))
+        pygame.draw.rect(self.win, "white", (x,y,200,80))
  
         # Font Setup
         font = pygame.font.SysFont("Verdana", 15)
@@ -357,22 +355,22 @@ class Animation:
         menu_info = "M - Go to the main menu"
         menu = font.render(menu_info, True, "red")
         menu_rect = menu.get_rect(center=(x + 100, y + 20))
-        win.blit(menu, menu_rect)
+        self.win.blit(menu, menu_rect)
  
         # Left Key Info
         left_info = "Left Key - Previous Step"
         left = font.render(left_info, True, "red")
         left_rect = left.get_rect(center=(x + 95, y + 40))
-        win.blit(left, left_rect)
+        self.win.blit(left, left_rect)
  
         # Right Key Info
         rigth_info = "Right Key - Next Step"
         right = font.render(rigth_info, True, "red")
         right_rect = right.get_rect(center=(x + 85, y + 60))
-        win.blit(right, right_rect)
+        self.win.blit(right, right_rect)
  
         pygame.display.update()
-
+'''
 # unsorted = [random.randint(0, 100) for i in range(10)]
 unsorted = [2,4,3,6,1]
 print(unsorted)
@@ -389,5 +387,5 @@ animation.step_through()
 #     animation.combine(i)
 
 # animation.new_resize()
-
-pygame.quit()
+'''
+#pygame.quit()
