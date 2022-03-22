@@ -2,7 +2,7 @@ import pygame
 from dataclasses import dataclass
 import sorting_algorithms as sa
 #import random
-#import sys
+import sys
 '''
 pygame.init()
 
@@ -341,6 +341,7 @@ class Animation:
                     if event.key == pygame.K_m:
                         pygame.display.quit()
                         sa.main()
+                        sys.exit()
 
     def information_box(self):
         # Create A Box

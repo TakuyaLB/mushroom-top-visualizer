@@ -9,6 +9,7 @@ pygame.init
 
 class Interface: 
     def __init__(self, window):
+        self.window = window
         self.mode = Frame(window)
         self.algorithms = Frame(window)
         self.userinput = Frame(window)
@@ -95,6 +96,7 @@ class Interface:
 
     def change_to_blocksorting(self):
         unsorted = self.getelements()
+        self.window.destroy()
         import boxes
         pygame.init()
         win = pygame.display.set_mode((1300, 700))
