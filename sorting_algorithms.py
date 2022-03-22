@@ -1,5 +1,6 @@
 from tkinter import *
 import random
+import pygame
 
 BUTTON_HEIGHT = 1
 BUTTON_WIDTH = 10
@@ -32,8 +33,10 @@ class Interface:
         self.button3d.place(relx = 0.5, rely = 0.4, anchor = N)
         self.button3e = Button(self.algorithms, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "Quicksort", command = lambda: self.change_to_userinput("Quicksort"))
         self.button3e.place(relx = 0.5, rely = 0.5, anchor = N)
+        self.button3e = Button(self.algorithms, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "Heapsort", command = lambda: self.change_to_userinput("Heapsort"))
+        self.button3e.place(relx = 0.6, rely = 0.6, anchor = N)
         self.button4 = Button(self.algorithms, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "Back", command = self.change_to_mode)
-        self.button4.place(relx = 0.5, rely = 0.6, anchor = N)
+        self.button4.place(relx = 0.7, rely = 0.7, anchor = N)
 
         self.button5 = Button(self.userinput, height = BUTTON_HEIGHT, width = BUTTON_WIDTH, text = "sort", command = self.change_to_blocksorting)
         self.button5.place(relx = 0.5, rely = 0.5, anchor = CENTER)
@@ -89,7 +92,27 @@ class Interface:
         self.algorithms.pack_forget()
 
     def change_to_blocksorting(self):
-        nodes = self.getelements()
+        unsorted = self.getelements()
+        import boxes
+        pygame.init()
+        win = pygame.display.set_mode((1300, 700))
+        pygame.display.set_caption("Boxes")
+        animation = boxes.Animation(unsorted)
+        animation.draw_boxes(win)
+        if self.sortingAlgorithm == "Bubblesort":
+            animation.bubble_sort(unsorted)
+        elif self.sortingAlgorithm == "Insertionsort":
+            animation.insertion_sort(unsorted)
+        elif self.sortingAlgorithm == "Selectionsort":
+            animation.selection_sort(unsorted)
+        elif self.sortingAlgorithm == "Mergesort":
+            animation.mergeSort(unsorted)
+        elif self.sortingAlgorithm == "Quicksort":
+            animation.quick_sort(unsorted, 0, len(unsorted) - 1)
+        elif self.sortingAlgorithm == "Heapsort":
+            animation.heap_sort(unsorted)
+        animation.step_through()
+        pygame.quit()
         self.entry.delete(0, "end")
         self.userinput.pack_forget()
         self.change_to_algorithms()
