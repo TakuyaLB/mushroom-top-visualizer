@@ -100,7 +100,7 @@ class Interface:
         import boxes
         pygame.init()
         win = pygame.display.set_mode((1300, 700))
-        pygame.display.set_caption("Boxes")
+        pygame.display.set_caption("cima di funghi")
         animation = boxes.Animation(unsorted, win)
         animation.draw_boxes()
         if self.sortingAlgorithm == "Bubblesort":
@@ -116,7 +116,6 @@ class Interface:
         elif self.sortingAlgorithm == "Heapsort":
             animation.heap_sort(unsorted)
         animation.step_through()
-        #pygame.display.quit()
         self.entry.delete(0, "end")
         self.userinput.pack_forget()
         self.change_to_algorithms()

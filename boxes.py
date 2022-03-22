@@ -1,15 +1,7 @@
 import pygame
 from dataclasses import dataclass
 import sorting_algorithms as sa
-#import random
 import sys
-'''
-pygame.init()
-
-win = pygame.display.set_mode((1300, 700))
-
-pygame.display.set_caption("Boxes")
-'''
 
 @dataclass
 class Number:
@@ -21,7 +13,6 @@ class Number:
 class Animation:
     def __init__(self, list_nums, win):
         self.win = win
-        #self.keypress = ""
         self.scale = 0
         self.instructions = []
         self.nums = []
@@ -157,10 +148,6 @@ class Animation:
         self.split_index.remove(index1)
         step = 5
         self.left_border = self.left_border + self.box_size // 2
-        # if self.nums[0].rect.x - self.box_size // 2 <= 0 or (self.nums[self.size - 1].rect.x + self.box_size) + self.box_size // 2 >= self.width:
-        #     print(self.box_size)
-        #     self.new_resize()
-        #     print(self.box_size)
         ori_x = self.nums[index1].rect.x
         while self.nums[index1].rect.x < ori_x + self.box_size // 2:
             pygame.event.pump()
@@ -177,8 +164,6 @@ class Animation:
                 self.nums[index].rect.x -= step
             self.draw_boxes(self.win)
             pygame.time.delay(50)
-        # if len(self.split_index) > 1:
-        #     self.new_resize()
 
     def bubble_sort(self, array):
         is_sorted = False
@@ -331,6 +316,8 @@ class Animation:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.display.quit()
+                    sa.main()
+                    sys.exit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RIGHT:
                         self.information_box()
@@ -373,22 +360,3 @@ class Animation:
         self.win.blit(right, right_rect)
  
         pygame.display.update()
-'''
-# unsorted = [random.randint(0, 100) for i in range(10)]
-unsorted = [2,4,3,6,1]
-print(unsorted)
-animation = Animation(unsorted)
-animation.draw_boxes(win)
-animation.heap_sort(unsorted)
-print(animation.instructions)
-animation.step_through()
-
-# stop = 3
-# for i in range(9, stop-1, -1):
-#     animation.new_split(i)
-# for i in range(stop, 10, 1):
-#     animation.combine(i)
-
-# animation.new_resize()
-'''
-#pygame.quit()
