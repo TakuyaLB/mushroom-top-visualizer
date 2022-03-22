@@ -1,5 +1,6 @@
 import pygame
 from dataclasses import dataclass
+import sorting_algorithms as sa
 #import random
 #import sys
 '''
@@ -339,6 +340,7 @@ class Animation:
                         return "previous"
                     if event.key == pygame.K_m:
                         pygame.display.quit()
+                        sa.main()
 
     def information_box(self):
         # Create A Box

@@ -5,6 +5,8 @@ import pygame
 BUTTON_HEIGHT = 1
 BUTTON_WIDTH = 10
 
+pygame.init
+
 class Interface: 
     def __init__(self, window):
         self.mode = Frame(window)
@@ -151,12 +153,12 @@ class Interface:
         return inputlist
 
 def main():
-    window = Tk()
-    window.title("Sorting Algorithms")
-    window.geometry("1920x1080")
-    interface = Interface(window)
-    interface.change_to_mode()
-    window.mainloop()
+        window = Tk()
+        window.title("Sorting Algorithms")
+        window.geometry("1920x1080")
+        interface = Interface(window)
+        interface.change_to_mode()
+        window.mainloop()
 
 if __name__ =='__main__':
     main()
