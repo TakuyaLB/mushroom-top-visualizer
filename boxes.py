@@ -119,15 +119,13 @@ class Animation:
         step = 5
         self.left_border = self.left_border - self.box_size // 2
         if self.nums[0].rect.x - self.box_size // 2 <= 0 or (self.nums[self.size - 1].rect.x + self.box_size) + self.box_size // 2 >= self.width:
-            print(self.box_size)
             self.new_resize()
-            print(self.box_size)
         ori_x = self.nums[index1].rect.x
         while self.nums[index1].rect.x > ori_x - self.box_size // 2:
             pygame.event.pump()
             for index in range (index1 + 1):
                 self.nums[index].rect.x -= step
-            self.draw_boxes(self.win)
+            self.draw_boxes()
             pygame.time.delay(50)
 
         ori_x2 = self.nums[index2].rect.x
@@ -135,7 +133,7 @@ class Animation:
             pygame.event.pump()
             for index in range (index2, self.size, 1):
                 self.nums[index].rect.x += step
-            self.draw_boxes(self.win)
+            self.draw_boxes()
             pygame.time.delay(50)
 
 
@@ -153,7 +151,7 @@ class Animation:
             pygame.event.pump()
             for index in range (index1 + 1):
                 self.nums[index].rect.x += step
-            self.draw_boxes(self.win)
+            self.draw_boxes()
             pygame.time.delay(50)
 
 
@@ -162,7 +160,7 @@ class Animation:
             pygame.event.pump()
             for index in range (index2, self.size, 1):
                 self.nums[index].rect.x -= step
-            self.draw_boxes(self.win)
+            self.draw_boxes()
             pygame.time.delay(50)
 
     def bubble_sort(self, array):
