@@ -32,7 +32,7 @@ class Animation:
             text_rect.center = (self.left_border + (self.box_size + self.space) * i + self.box_size // 2), (self.top_border + self.box_size // 2)
             self.nums.append(Number(n, rect, text))
 
-    def new_resize(self):
+    def resize(self):
         self.box_size = (self.width - ((self.size + 1) * self.space) - (self.empty_spaces + 2) * self.box_size) // self.size 
         self.left_border = int((self.width - ((self.size * self.box_size) + ((self.size - 1) * self.space) + (self.empty_spaces * self.box_size))) / 2)
         offset = 0
@@ -109,7 +109,7 @@ class Animation:
         self.nums[index1] = self.nums[index2]
         self.nums[index2] = tmp
 
-    def new_split(self, index1):
+    def split(self, index1):
         if index1 == (self.size - 1):
             index2 = index1
         else:
@@ -120,7 +120,7 @@ class Animation:
         self.left_border = self.left_border - self.box_size // 2
         if self.nums[0].rect.x - self.box_size // 2 <= 0 or (self.nums[self.size - 1].rect.x + self.box_size) + self.box_size // 2 >= self.width:
             print(self.box_size)
-            self.new_resize()
+            self.resize()
             print(self.box_size)
         ori_x = self.nums[index1].rect.x
         while self.nums[index1].rect.x > ori_x - self.box_size // 2:
@@ -299,7 +299,7 @@ class Animation:
                 if l == "swap":
                     self.swap(i, j)
                 if l == "split":
-                    self.new_split(i)
+                    self.split(i)
                 if x < len(self.instructions) - 1:
                     x += 1
             if key == "previous" and x != 0:
