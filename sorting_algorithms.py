@@ -103,19 +103,21 @@ class Interface:
         pygame.display.set_caption("cima di funghi")
         animation = boxes.Animation(unsorted, win)
         animation.draw_boxes()
-        if self.sortingAlgorithm == "Bubblesort":
-            animation.bubble_sort(unsorted)
-        elif self.sortingAlgorithm == "Insertionsort":
-            animation.insertion_sort(unsorted)
-        elif self.sortingAlgorithm == "Selectionsort":
-            animation.selection_sort(unsorted)
-        elif self.sortingAlgorithm == "Mergesort":
-            animation.mergeSort(unsorted)
-        elif self.sortingAlgorithm == "Quicksort":
-            animation.quick_sort(0, len(unsorted) - 1, unsorted)
-        elif self.sortingAlgorithm == "Heapsort":
-            animation.heap_sort(unsorted)
-        animation.step_through()
+        if self.sortingAlgorithm == "Mergesort":
+            animation.step_through_merge_sort()
+        else:
+            if self.sortingAlgorithm == "Bubblesort":
+                animation.bubble_sort(unsorted)
+            elif self.sortingAlgorithm == "Insertionsort":
+                animation.insertion_sort(unsorted)
+            elif self.sortingAlgorithm == "Selectionsort":
+                animation.selection_sort(unsorted)
+            elif self.sortingAlgorithm == "Quicksort":
+                animation.quick_sort(0, len(unsorted) - 1, unsorted)
+            elif self.sortingAlgorithm == "Heapsort":
+                animation.heap_sort(unsorted)
+            animation.step_through()
+
         self.entry.delete(0, "end")
         self.userinput.pack_forget()
         self.change_to_algorithms()
