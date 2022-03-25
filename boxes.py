@@ -2,6 +2,8 @@ import pygame
 from dataclasses import dataclass
 import sorting_algorithms as sa
 import sys
+from enum import Enum
+
 
 @dataclass
 class Number:
@@ -25,6 +27,7 @@ class Animation:
         self.font = pygame.font.Font('freesansbold.ttf', int(self.box_size / 2))
         self.left_border = (self.width - ((self.box_size * self.size) + (self.size - 1) * self.space)) // 2
         self.top_border = (self.height - self.box_size) // 2
+        self.fps = 60
         for i, n in enumerate(list_nums):
             rect = pygame.Rect(self.left_border + (self.box_size + self.space) * i, self.top_border, self.box_size, self.box_size)
             text = self.font.render(str(list_nums[i]), True, 'white')
@@ -119,15 +122,19 @@ class Animation:
         step = 5
         self.left_border = self.left_border - self.box_size // 2
         if self.nums[0].rect.x - self.box_size // 2 <= 0 or (self.nums[self.size - 1].rect.x + self.box_size) + self.box_size // 2 >= self.width:
+<<<<<<< HEAD
             print(self.box_size)
             self.resize()
             print(self.box_size)
+=======
+            self.new_resize()
+>>>>>>> 79e30068e6d716912bb917b0895f953373e590a9
         ori_x = self.nums[index1].rect.x
         while self.nums[index1].rect.x > ori_x - self.box_size // 2:
             pygame.event.pump()
             for index in range (index1 + 1):
                 self.nums[index].rect.x -= step
-            self.draw_boxes(self.win)
+            self.draw_boxes()
             pygame.time.delay(50)
 
         ori_x2 = self.nums[index2].rect.x
@@ -135,7 +142,7 @@ class Animation:
             pygame.event.pump()
             for index in range (index2, self.size, 1):
                 self.nums[index].rect.x += step
-            self.draw_boxes(self.win)
+            self.draw_boxes()
             pygame.time.delay(50)
 
 
@@ -153,7 +160,7 @@ class Animation:
             pygame.event.pump()
             for index in range (index1 + 1):
                 self.nums[index].rect.x += step
-            self.draw_boxes(self.win)
+            self.draw_boxes()
             pygame.time.delay(50)
 
 
@@ -162,7 +169,7 @@ class Animation:
             pygame.event.pump()
             for index in range (index2, self.size, 1):
                 self.nums[index].rect.x -= step
-            self.draw_boxes(self.win)
+            self.draw_boxes()
             pygame.time.delay(50)
 
     def bubble_sort(self, array):
@@ -225,36 +232,55 @@ class Animation:
             self.switch(low, i - 1, array)
         return i - 1
 
-    def mergeSort(self, array):
-        arrayLength = len(array)
+    def translate(self, nums, x, y, time):
+        steps = int(self.fps * time / 1000)
+        original_rects = [num.rect.copy() for num in nums]
+        for i in range(1, steps + 1):
+            new_x = i / steps * x
+            new_y = i / steps * y
+            for i, num in enumerate(nums):
+                num.rect.topleft = (new_x + original_rects[i].x, new_y + original_rects[i].y)
+            yield False
 
-        if arrayLength == 1:
-            return array
+    def translate_absolute(self, num, x, y, time):
+        original_pos = num.rect.copy()
+        yield from self.translate([num], x - original_pos.x, y - original_pos.y, time)
 
-        middle = arrayLength // 2
-
-        leftPartition = self.mergeSort(array[:middle])
-        rightPartition = self.mergeSort(array[middle:])
-
-        
-        return self.mergeFun(leftPartition, rightPartition)
-
-    def mergeFun(left, right):
-        output = []
-        i = j = 0
-
-        while i < len(left) and j < len(right):
-            if left[i] < right[j]:
-                output.append(left[i])
-                i += 1
+    def merge(self, arr, a, b):
+        a_idx = 0
+        b_idx = 0
+        leftmost = a[0].rect.left
+        top = a[0].rect.top + self.space + self.box_size
+        for i in range(len(a) + len(b)):
+            if a_idx >= len(a):
+                arr[i] = b[b_idx]
+                b_idx += 1
+            elif b_idx >= len(b):
+                arr[i] = a[a_idx]
+                a_idx += 1
+            elif a[a_idx].num <= b[b_idx].num:
+                arr[i] = a[a_idx]
+                a_idx += 1
             else:
-                output.append(right[j])
-                j += 1
+                arr[i] = b[b_idx]
+                b_idx += 1
+            yield from self.translate_absolute(arr[i], leftmost + (self.space + self.box_size) * i, top, 250)
 
-        output.extend(left[i:])
-        output.extend(right[j:])
-
-        return output
+    def merge_sort(self, arr=None):
+        if arr is None:
+            yield True
+            arr = self.nums
+        if len(arr) == 1:
+            return arr
+        mid = len(arr) // 2
+        left = arr[:mid]
+        right = arr[mid:]
+        yield from self.translate(arr, 0, -self.space - self.box_size, 250)
+        yield True
+        yield from self.merge_sort(left)
+        yield from self.merge_sort(right)
+        yield from self.merge(arr, left, right)
+        yield True
 
     def heapifyFun(self, array, n, i):
         largest = i
@@ -309,6 +335,27 @@ class Animation:
                 if lprev == "split":
                     self.combine(iprev)
                 x -= 1
+
+    def step_through_merge_sort(self):
+        run = True
+        clock = pygame.time.Clock()
+        merge_sort = self.merge_sort()
+        signal = None
+        while True:
+            try:
+                signal = next(merge_sort)
+            except StopIteration:
+                pass
+            if signal:
+                self.keypress()
+                continue
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    run = False
+            if not run:
+                break
+            self.draw_boxes()
+            clock.tick(self.fps)
     
     def keypress(self):
         while True:

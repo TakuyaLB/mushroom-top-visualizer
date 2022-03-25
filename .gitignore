@@ -4,3 +4,5 @@
 /.idea/usage.statistics.xml
 *.iml
 .DS_Store
+*.pyc
+*/__pycache__/*
